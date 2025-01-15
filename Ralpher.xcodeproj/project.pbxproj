@@ -60,19 +60,19 @@
 
 /* Begin PBXFileReference section */
 		7576AE1F2D15994D00C8CD5B /* widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widgetExtension.entitlements; sourceTree = "<group>"; };
-		75CD53962D08C59200863607 /* PruebaPosgree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PruebaPosgree.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75CD53962D08C59200863607 /* Ralpher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ralpher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F85F022D14C4F500758650 /* widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = widgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		75F85F042D14C4F500758650 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		75F85F062D14C4F500758650 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		750F4E822D0B4EC800811AF5 /* Exceptions for "PruebaPosgree" folder in "PruebaPosgree" target */ = {
+		750F4E822D0B4EC800811AF5 /* Exceptions for "Ralpher" folder in "Ralpher" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 75CD53952D08C59200863607 /* PruebaPosgree */;
+			target = 75CD53952D08C59200863607 /* Ralpher */;
 		};
 		75F85F1C2D14C4F700758650 /* Exceptions for "widget" folder in "widgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -84,12 +84,12 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		75CD53982D08C59200863607 /* PruebaPosgree */ = {
+		75CD53982D08C59200863607 /* Ralpher */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				750F4E822D0B4EC800811AF5 /* Exceptions for "PruebaPosgree" folder in "PruebaPosgree" target */,
+				750F4E822D0B4EC800811AF5 /* Exceptions for "Ralpher" folder in "Ralpher" target */,
 			);
-			path = PruebaPosgree;
+			path = Ralpher;
 			sourceTree = "<group>";
 		};
 		75F85F082D14C4F500758650 /* widget */ = {
@@ -134,7 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				7576AE1F2D15994D00C8CD5B /* widgetExtension.entitlements */,
-				75CD53982D08C59200863607 /* PruebaPosgree */,
+				75CD53982D08C59200863607 /* Ralpher */,
 				75F85F082D14C4F500758650 /* widget */,
 				75F85F032D14C4F500758650 /* Frameworks */,
 				75CD53972D08C59200863607 /* Products */,
@@ -144,7 +144,7 @@
 		75CD53972D08C59200863607 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				75CD53962D08C59200863607 /* PruebaPosgree.app */,
+				75CD53962D08C59200863607 /* Ralpher.app */,
 				75F85F022D14C4F500758650 /* widgetExtension.appex */,
 			);
 			name = Products;
@@ -162,9 +162,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		75CD53952D08C59200863607 /* PruebaPosgree */ = {
+		75CD53952D08C59200863607 /* Ralpher */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 75CD53A42D08C59400863607 /* Build configuration list for PBXNativeTarget "PruebaPosgree" */;
+			buildConfigurationList = 75CD53A42D08C59400863607 /* Build configuration list for PBXNativeTarget "Ralpher" */;
 			buildPhases = (
 				75CD53922D08C59200863607 /* Sources */,
 				75CD53932D08C59200863607 /* Frameworks */,
@@ -179,9 +179,9 @@
 				75452D582D381D7A0070BDC1 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				75CD53982D08C59200863607 /* PruebaPosgree */,
+				75CD53982D08C59200863607 /* Ralpher */,
 			);
-			name = PruebaPosgree;
+			name = Ralpher;
 			packageProductDependencies = (
 				75F85EDB2D13563900758650 /* GoogleSignIn */,
 				75F85EDD2D13563900758650 /* GoogleSignInSwift */,
@@ -193,7 +193,7 @@
 				75F85EF72D135C8000758650 /* Supabase */,
 			);
 			productName = PruebaPosgree;
-			productReference = 75CD53962D08C59200863607 /* PruebaPosgree.app */;
+			productReference = 75CD53962D08C59200863607 /* Ralpher.app */;
 			productType = "com.apple.product-type.application";
 		};
 		75F85F012D14C4F500758650 /* widgetExtension */ = {
@@ -236,7 +236,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 75CD53912D08C59200863607 /* Build configuration list for PBXProject "PruebaPosgree" */;
+			buildConfigurationList = 75CD53912D08C59200863607 /* Build configuration list for PBXProject "Ralpher" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -254,7 +254,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				75CD53952D08C59200863607 /* PruebaPosgree */,
+				75CD53952D08C59200863607 /* Ralpher */,
 				75F85F012D14C4F500758650 /* widgetExtension */,
 			);
 		};
@@ -437,14 +437,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = PruebaPosgree/PruebaPosgree.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Ralpher/Ralpher.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PruebaPosgree/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Ralpher/Preview Content\"";
 				DEVELOPMENT_TEAM = JGTZWD9489;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PruebaPosgree/Info.plist;
+				INFOPLIST_FILE = Ralpher/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -456,7 +456,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = decmer.PruebaPosgree;
+				PRODUCT_BUNDLE_IDENTIFIER = decmer.Ralpher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -469,14 +469,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = PruebaPosgree/PruebaPosgree.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Ralpher/Ralpher.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PruebaPosgree/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Ralpher/Preview Content\"";
 				DEVELOPMENT_TEAM = JGTZWD9489;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PruebaPosgree/Info.plist;
+				INFOPLIST_FILE = Ralpher/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -488,7 +488,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = decmer.PruebaPosgree;
+				PRODUCT_BUNDLE_IDENTIFIER = decmer.Ralpher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -516,7 +516,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = decmer.PruebaPosgree.widget;
+				PRODUCT_BUNDLE_IDENTIFIER = decmer.Ralpher.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -545,7 +545,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = decmer.PruebaPosgree.widget;
+				PRODUCT_BUNDLE_IDENTIFIER = decmer.Ralpher.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -557,7 +557,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		75CD53912D08C59200863607 /* Build configuration list for PBXProject "PruebaPosgree" */ = {
+		75CD53912D08C59200863607 /* Build configuration list for PBXProject "Ralpher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				75CD53A22D08C59400863607 /* Debug */,
@@ -566,7 +566,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		75CD53A42D08C59400863607 /* Build configuration list for PBXNativeTarget "PruebaPosgree" */ = {
+		75CD53A42D08C59400863607 /* Build configuration list for PBXNativeTarget "Ralpher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				75CD53A52D08C59400863607 /* Debug */,

@@ -7,7 +7,6 @@
 
 import WidgetKit
 import AppIntents
-import Supabase
 
 
 // Configuración del Intent para el widget

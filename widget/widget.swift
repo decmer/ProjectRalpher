@@ -7,7 +7,6 @@
 
 import WidgetKit
 import SwiftUI
-import Supabase
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
