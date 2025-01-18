@@ -6,3 +6,13 @@
 //
 
 import Foundation
+import SwiftUI
+
+@Observable
+final class ContenedorSchool: Codable {
+    var schools: SchoolsModel
+    
+    init(schools: SchoolsModel) {
+        self.schools = schools
+    }
+}

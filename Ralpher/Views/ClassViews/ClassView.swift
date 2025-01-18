@@ -8,11 +8,42 @@
 import SwiftUI
 
 struct ClassView: View {
+    @Environment(ViewModel.self) var vm
+    
+    @State private var isAdd: Bool = false
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            if let classM = vm.classM {
+                LazyAdapList(preferredWidth: 250) {
+                    ForEach(classM) { classModel in
+                        NavigationLink {
+                            SelectedClassView()
+                        } label: {
+                            ClassPreview(classModel: classModel)
+                                .frame(width: 250, height: 250)
+                        }
+                    }
+                }
+                .padding(7)
+                .navigationBarTitle("Class")
+                .toolbar(content: {
+                    Button("Add Class") {
+                        isAdd = true
+                    }
+                })
+                .sheet(isPresented: $isAdd) {
+                    ClassAddView(isPresented: $isAdd)
+                }
+            } else {
+                Text("There are no classes")
+            }
+        }
     }
 }
 
 #Preview {
     ClassView()
+        .environment(Preview.vm)
+        .environment(ContenedorSchool(schools: .init(name: "schoolPreview")))
 }

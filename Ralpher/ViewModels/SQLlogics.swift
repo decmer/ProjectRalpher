@@ -14,7 +14,6 @@ extension ViewModel {
     
     func fetchSchools() async throws {
         schools = try await supabase.database.from("schools").select("*").execute().value
-        self.handleDatabaseChange(self.schools)
     }
     
     func fetchSchoolsKey() async throws -> String {
@@ -125,11 +124,56 @@ extension ViewModel {
             
         let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "schools")
 
+        Task {
+            for await insertAction in insertStream {
+                DispatchQueue.main.async {
+                    self.schools?.append(self.convertDicToSchools(insertAction.record))
+                }
+            }
+        }
+    
+        Task {
+            for await updateAction in updateStream {
+                DispatchQueue.main.async {
+                    let updatedSchool = self.convertDicToSchools(updateAction.record)
+                    let oldSchool = self.convertDicToSchools(updateAction.oldRecord)
+                    if let index = self.schools?.firstIndex(where: { $0.id == oldSchool.id }) {
+                        self.schools?[index] = updatedSchool
+                    }
+                }
+                
+            }
+        }
+    
+        Task {
+            for await deleteAction in deleteStream {
+                DispatchQueue.main.async {
+                    let idSchool = self.convertDicToSchools(deleteAction.oldRecord).id
+                    self.schools?.removeAll(where: { SchoolsModel in
+                        idSchool == SchoolsModel.id
+                    })
+                }
+            }
+        }
+
+        await channel.subscribe()
+    }
+    
+    func subscribeToClassUpdates() async {
+        channelSchools = await supabase.realtimeV2.channel("class")
+                
+        guard let channel = channelSchools else { return }
+        
+        let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "class")
+            
+        let updateStream = await channel.postgresChange(UpdateAction.self, schema: "public", table: "class")
+            
+        let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "class")
+
             Task {
                 for await insertAction in insertStream {
                     DispatchQueue.main.async {
-                        self.schools?.append(self.convertDicToSchools(insertAction.record))
-                        self.handleDatabaseChange(self.schools)
+                        self.classM?.append(self.convertDicToClass(insertAction.record))
                     }
                 }
             }
@@ -137,12 +181,11 @@ extension ViewModel {
             Task {
                 for await updateAction in updateStream {
                     DispatchQueue.main.async {
-                        let updatedSchool = self.convertDicToSchools(updateAction.record)
-                        let oldSchool = self.convertDicToSchools(updateAction.oldRecord)
-                        if let index = self.schools?.firstIndex(where: { $0.id == oldSchool.id }) {
-                            self.schools?[index] = updatedSchool
+                        let updatedClass = self.convertDicToClass(updateAction.record)
+                        let oldClass = self.convertDicToClass(updateAction.oldRecord)
+                        if let index = self.schools?.firstIndex(where: { $0.id == oldClass.id }) {
+                            self.classM?[index] = updatedClass
                         }
-                        self.handleDatabaseChange(self.schools)
                     }
                     
                 }
@@ -151,11 +194,10 @@ extension ViewModel {
             Task {
                 for await deleteAction in deleteStream {
                     DispatchQueue.main.async {
-                        let idSchool = self.convertDicToSchools(deleteAction.oldRecord).id
-                        self.schools?.removeAll(where: { SchoolsModel in
-                            idSchool == SchoolsModel.id
+                        let idClass = self.convertDicToClass(deleteAction.oldRecord).id
+                        self.classM?.removeAll(where: { ClassModel in
+                            idClass == ClassModel.id
                         })
-                        self.handleDatabaseChange(self.schools)
                     }
                 }
             }
@@ -176,13 +218,15 @@ extension ViewModel {
         return school
     }
     
-    func handleDatabaseChange(_ payload: [SchoolsModel]?) {
-        // Guarda los datos en App Groups para que el widget pueda acceder
-//        if let sharedDefaults = UserDefaults(suiteName: "group.com.decmer.ralpher") {
-//            sharedDefaults.set(payload, forKey: "ultimoCambio")
-//        }
+    func convertDicToClass(_ dic: [String: AnyJSON]) -> ClassModel {
+        let id = dic["id"]?.intValue
+        let id_school = dic["id_school"]?.intValue
+        let name = dic["name"]?.stringValue ?? ""
+        let desccription = dic["desccription"]?.stringValue ?? ""
+        let color = dic["color"]?.stringValue
+
+        let classM = ClassModel(id: id, name: name, desccription: desccription, id_school: id_school, color: color)
         
-        // Notifica al widget que debe actualizarse
-        WidgetCenter.shared.reloadAllTimelines()
+        return classM
     }
 }

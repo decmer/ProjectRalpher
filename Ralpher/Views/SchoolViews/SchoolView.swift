@@ -11,6 +11,7 @@ struct SchoolView: View {
     @Environment(ViewModel.self) var vm
     
     @State var isPresentedCreateView: Bool = false
+    @State var isPresentedJoinView: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -18,27 +19,47 @@ struct SchoolView: View {
                 ScrollView {
                     LazyVGrid(columns: [GridItem()]) {
                         ForEach(schools) { school in
-                            SchoolPreview(model: school)
-                                .frame(width: 350, height: 200)
-                                .padding(.vertical, 12)
+                            NavigationLink {
+                                SelectedSchoolView()
+                                    .environment(ContenedorSchool(schools: school))
+                            } label: {
+                                SchoolPreview(model: school)
+                                    .frame(width: 350, height: 200)
+                                    .padding(.vertical, 12)
+                            }
                         }
                     }
                 }
                 .navigationTitle("Schools")
                 .toolbar {
-                    ToolbarItem {
-                        Button {
-                            isPresentedCreateView = true
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button {
+                                isPresentedCreateView = true
+                            } label: {
+                                Text("Create School")
+                            }
+                            Button {
+                                withAnimation {
+                                    isPresentedJoinView = true
+                                }
+                            } label: {
+                                Text("Join School")
+                            }
                         } label: {
-                            Text("add")
+                            Image(systemName: "plus")
                         }
-
                     }
                 }
                 .refreshable { Task { do { try await vm.fetchSchools() } catch { print(error) } } }
                 .sheet(isPresented: $isPresentedCreateView) {
-                    JoinAndCreateSchoolsView(isPresent: $isPresentedCreateView)
+                    SchoolCreateView(isPresented: $isPresentedCreateView)
                 }
+                .sheet(isPresented: $isPresentedJoinView) {
+                    JoinSchoolView(isPresented: $isPresentedJoinView)
+                        .presentationDetents([.fraction(0.12)])
+                }
+                
             } else {
                 Text("ninguna escuela")
                     .onAppear {
@@ -47,7 +68,6 @@ struct SchoolView: View {
                     .navigationTitle("Schools")
                     .refreshable { Task { do { try await vm.fetchSchools() } catch { print(error) } } }
             }
-            
         }
     }
 }

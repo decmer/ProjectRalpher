@@ -7,12 +7,52 @@
 
 import SwiftUI
 
-struct LazyAdapList: View {
+struct LazyAdapList<Content> : View where Content : View {
+    let items = Array(1...5)
+    var preferredWidth: CGFloat
+    var data: () -> Content
+    
+    init(preferredWidth: CGFloat, data: @escaping () -> Content) {
+        self.preferredWidth = preferredWidth + preferredWidth * 0.1
+        self.data = data
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        GeometryReader { geometry in
+            ScrollView {
+                let columns = gridCal(for: geometry.size.width)
+                LazyVGrid(columns: columns, spacing: calculateSpacing(for: geometry.size.width), content: data)
+            }
+        }
+    }
+    
+    func gridCal(for screenWidth: CGFloat) -> [GridItem] {
+        var gridCalAux = [GridItem]()
+        let maxColumns = Int(screenWidth / preferredWidth)
+        for _ in 0..<maxColumns {
+            gridCalAux.append(.init(.adaptive(minimum: preferredWidth)))
+        }
+        return gridCalAux
+    }
+    
+    private func calculateSpacing(for screenWidth: CGFloat) -> CGFloat {
+        if preferredWidth <= 50 { return 50 }
+        if screenWidth < preferredWidth {
+            
+        }
+        let maxColumns = Int(screenWidth / preferredWidth)
+        if maxColumns == 1 { return 24 }
+        return (screenWidth - CGFloat(maxColumns) * preferredWidth) / CGFloat(maxColumns)
     }
 }
 
 #Preview {
-    LazyAdapList()
+    LazyAdapList(preferredWidth: 100) {
+        ForEach(Range(1...5), id: \.self) { i in
+            Text("Item\(i)")
+                .frame(width: 100, height: 100)
+                .background(Color.red)
+                .clipShape(RoundedRectangle(cornerRadius: 7))
+        }
+    }
 }

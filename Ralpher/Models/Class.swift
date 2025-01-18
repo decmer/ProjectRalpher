@@ -11,5 +11,6 @@ struct ClassModel: Identifiable, Decodable, Encodable {
     var id: Int?
     var name: String
     var desccription: String?
-    var id_school: Int
+    var id_school: Int?
+    var color: String?
 }

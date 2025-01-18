@@ -21,6 +21,7 @@ final class ViewModel: ObservableObject {
 
     var users: UserModel?
     var schools: [SchoolsModel]?
+    var classM: [ClassModel]?
     var isAuthenticated: Bool?
     
     var channelUser: RealtimeChannelV2?
@@ -36,6 +37,9 @@ final class ViewModel: ObservableObject {
         }
         Task {
             await subscribeToSchoolsUpdates()
+        }
+        Task {
+            await subscribeToClassUpdates()
         }
     }
     

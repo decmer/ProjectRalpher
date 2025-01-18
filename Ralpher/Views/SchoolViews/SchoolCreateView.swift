@@ -20,60 +20,80 @@ struct SchoolCreateView: View {
     @Binding var isPresented: Bool
     
     var body: some View {
-        VStack {
-
+        Form {
+            HStack {
+                Spacer()
+                Text("Create New School")
+                    .font(.title2)
+                    .bold()
+                Spacer()
+            }
+            Section {
                 TextField("Name", text: $name)
-                .padding()
-
-            
-
+                    .padding()
                 ColorPicker("Color", selection: $color)
-                .padding()
-
+                    .padding()
+            }
             
-
-
-                PhotosPicker(
-                            selection: $selectedItem,
-                            matching: .images,
-                            photoLibrary: .shared()) {
-                                Text("Selecciona una foto")
+            Section {
+                if let img, let uiImage = UIImage(data: img) {
+                    HStack {
+                        Spacer()
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .overlay {
+                                VStack {
+                                    HStack {
+                                        Spacer()
+                                        Button(action: {
+                                            withAnimation {
+                                                self.img = nil
+                                                selectedItem = nil
+                                            }
+                                        }) {
+                                            Image(systemName: "xmark.circle")
+                                                .foregroundStyle(.red)
+                                                .frame(width: 35, height: 35)
+                                        }
+                                    }
+                                    Spacer()
+                                }
                             }
-                            .onChange(of: selectedItem) { newItem, _ in
-                                Task {
-                                    if let selectedItem, let data = try? await selectedItem.loadTransferable(type: Data.self) {
+                        Spacer()
+                    }
+                } else {
+                    PhotosPicker(
+                        selection: $selectedItem,
+                        matching: .images,
+                        photoLibrary: .shared()) {
+                            Text("Selecciona una foto")
+                        }
+                        .onChange(of: selectedItem) { newItem, _ in
+                            Task {
+                                if let selectedItem, let data = try? await selectedItem.loadTransferable(type: Data.self) {
+                                    withAnimation {
                                         img = data
                                     }
                                 }
                             }
-                            .padding()
-                        if let img, let uiImage = UIImage(data: img) {
-                            HStack {
-                                Spacer()
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 200, height: 200)
-                                Spacer()
-                            }
                         }
-                
-
-            Spacer()
+                        .padding()
+                }
+            }
+            
             Button("Create") {
                 Task {
                     do {
                         try await vm.createSchool(SchoolsModel(name: name, color: color.toHex()))
-                        print("creado")
-                        isPresented = false
+                        
                     } catch {
                         print(error.localizedDescription)
                     }
                 }
+                isPresented = false
             }
-            
         }
-        
     }
 }
 
