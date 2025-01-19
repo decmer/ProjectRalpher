@@ -16,6 +16,13 @@ extension ViewModel {
         schools = try await supabase.database.from("schools").select("*").execute().value
     }
     
+    func fetchClass() async throws {
+        if let schools = self.schoolSelected {
+            let classMAux: [ClassModel] = try await supabase.database.from("class").select("*").execute().value
+            self.classM = classMAux.filter({ $0.id_school == schools.id })
+        }
+    }
+    
     func fetchSchoolsKey() async throws -> String {
         let str: String = try await supabase.database.from("schools_key").select("codejoin").limit(1).execute().value
         return str
@@ -46,6 +53,13 @@ extension ViewModel {
             .from("users_schools")
             .delete()
             .eq("school_id", value: school.id!)
+            .execute()
+    }
+    
+    func createClass(_ classM: ClassModel) async throws {
+        try await supabase.database
+            .from("class")
+            .insert(classM)
             .execute()
     }
     
@@ -173,7 +187,12 @@ extension ViewModel {
             Task {
                 for await insertAction in insertStream {
                     DispatchQueue.main.async {
-                        self.classM?.append(self.convertDicToClass(insertAction.record))
+                        if let schoolSelected = self.schoolSelected {
+                            let classM = self.convertDicToClass(insertAction.record)
+                            if classM.id_school == schoolSelected.id {
+                                self.classM?.append(classM)
+                            }
+                        }
                     }
                 }
             }
@@ -181,23 +200,33 @@ extension ViewModel {
             Task {
                 for await updateAction in updateStream {
                     DispatchQueue.main.async {
-                        let updatedClass = self.convertDicToClass(updateAction.record)
-                        let oldClass = self.convertDicToClass(updateAction.oldRecord)
-                        if let index = self.schools?.firstIndex(where: { $0.id == oldClass.id }) {
-                            self.classM?[index] = updatedClass
+                        if let schoolSelected = self.schoolSelected {
+                            let updatedClass = self.convertDicToClass(updateAction.record)
+                            if updatedClass.id_school == schoolSelected.id {
+                                let oldClass = self.convertDicToClass(updateAction.oldRecord)
+                                if let index = self.classM?.firstIndex(where: { $0.id == oldClass.id }) {
+                                    self.classM?[index] = updatedClass
+                                }
+                            }
                         }
                     }
-                    
                 }
             }
         
             Task {
                 for await deleteAction in deleteStream {
                     DispatchQueue.main.async {
-                        let idClass = self.convertDicToClass(deleteAction.oldRecord).id
-                        self.classM?.removeAll(where: { ClassModel in
-                            idClass == ClassModel.id
-                        })
+                        if let schoolSelected = self.schoolSelected {
+                            let classM = self.convertDicToClass(deleteAction.oldRecord)
+                            if classM.id_school == schoolSelected.id {
+                                let idClass = classM.id
+                                self.classM?.removeAll(where: { ClassModel in
+                                    idClass == ClassModel.id
+                                })
+                            }
+                        }
+                        
+                        
                     }
                 }
             }
@@ -222,10 +251,10 @@ extension ViewModel {
         let id = dic["id"]?.intValue
         let id_school = dic["id_school"]?.intValue
         let name = dic["name"]?.stringValue ?? ""
-        let desccription = dic["desccription"]?.stringValue ?? ""
+        let description = dic["description"]?.stringValue ?? ""
         let color = dic["color"]?.stringValue
 
-        let classM = ClassModel(id: id, name: name, desccription: desccription, id_school: id_school, color: color)
+        let classM = ClassModel(id: id, name: name, description: description, id_school: id_school, color: color)
         
         return classM
     }

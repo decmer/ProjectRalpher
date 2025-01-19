@@ -15,13 +15,15 @@ struct SchoolView: View {
     
     var body: some View {
         NavigationStack {
-            if let schools = vm.schools {
+            if let schools = vm.schools, !schools.isEmpty {
                 ScrollView {
                     LazyVGrid(columns: [GridItem()]) {
                         ForEach(schools) { school in
                             NavigationLink {
                                 SelectedSchoolView()
-                                    .environment(ContenedorSchool(schools: school))
+                                    .onAppear {
+                                        vm.schoolSelected = school
+                                    }
                             } label: {
                                 SchoolPreview(model: school)
                                     .frame(width: 350, height: 200)
@@ -61,12 +63,18 @@ struct SchoolView: View {
                 }
                 
             } else {
-                Text("ninguna escuela")
+                Text("There are no Schools")
                     .onAppear {
                         Task { do { try await vm.fetchSchools() } catch { print(error) } }
                     }
                     .navigationTitle("Schools")
-                    .refreshable { Task { do { try await vm.fetchSchools() } catch { print(error) } } }
+                Button {
+                    Task { do { try await vm.fetchSchools() } catch { print(error) } }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundStyle(.blue)
+                }
+                .padding()
             }
         }
     }

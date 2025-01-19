@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ClassAddView: View {
     @Environment(ViewModel.self) var vm
-    @Environment(ContenedorSchool.self) var school
     
     @State private var name: String = ""
+    @State private var description: String = ""
     @State private var color: Color = .white
     @State private var timePerWeek: Int = 1 // Valor predeterminado para horas por semana
 
@@ -24,11 +24,11 @@ struct ClassAddView: View {
                     // Sección para el nombre de la clase
                     Section(header: Text("Class Details")) {
                         TextField("Name", text: $name)
+                        ColorPicker("Color", selection: $color)
                     }
                     
-                    // Sección para elegir el color
-                    Section(header: Text("Color")) {
-                        ColorPicker("Color", selection: $color)
+                    Section(header: Text("Description")) {
+                        TextEditor(text: $description)
                     }
                     
                     // Sección para horas por semana
@@ -43,7 +43,13 @@ struct ClassAddView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") {
-                        //createClass()
+                        Task {
+                            do {
+                                try await vm.createClass(.init(name: name, description: description, id_school: vm.schoolSelected?.id, color: color.toHex(), timeperweek: timePerWeek))
+                            } catch {
+                                print(error)
+                            }
+                        }
                     }
                     .disabled(name.isEmpty)
                 }
@@ -61,5 +67,4 @@ struct ClassAddView: View {
     @Previewable @State var bool = true
     ClassAddView(isPresented: $bool)
         .environment(Preview.vm)
-        .environment(ContenedorSchool(schools: .init(name: "SchoolPreview")))
 }

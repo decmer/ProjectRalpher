@@ -10,7 +10,8 @@ import Foundation
 struct ClassModel: Identifiable, Decodable, Encodable {
     var id: Int?
     var name: String
-    var desccription: String?
+    var description: String?
     var id_school: Int?
     var color: String?
+    var timeperweek: Int?
 }

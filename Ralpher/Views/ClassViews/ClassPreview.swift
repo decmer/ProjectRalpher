@@ -62,4 +62,5 @@ struct ClassPreview: View {
 
 #Preview {
     ClassPreview(classModel: .init(name: "jose", id_school: 244))
+        .frame(width: 250, height: 250)
 }

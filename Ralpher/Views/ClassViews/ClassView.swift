@@ -14,7 +14,7 @@ struct ClassView: View {
     
     var body: some View {
         NavigationStack {
-            if let classM = vm.classM {
+            if let classM = vm.classM, !classM.isEmpty {
                 LazyAdapList(preferredWidth: 250) {
                     ForEach(classM) { classModel in
                         NavigationLink {
@@ -24,6 +24,9 @@ struct ClassView: View {
                                 .frame(width: 250, height: 250)
                         }
                     }
+                }
+                .onAppear {
+                    Task { do { try await vm.fetchClass() } catch { print(error) } }
                 }
                 .padding(7)
                 .navigationBarTitle("Class")
@@ -37,6 +40,25 @@ struct ClassView: View {
                 }
             } else {
                 Text("There are no classes")
+                    .onAppear {
+                        Task { do { try await vm.fetchClass() } catch { print(error) } }
+                    }
+                    .navigationBarTitle("Class")
+                    .toolbar(content: {
+                        Button("Add Class") {
+                            isAdd = true
+                        }
+                    })
+                    .sheet(isPresented: $isAdd) {
+                        ClassAddView(isPresented: $isAdd)
+                    }
+                Button {
+                    Task { do { try await vm.fetchClass() } catch { print(error) } }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundStyle(.blue)
+                }
+                .padding()
             }
         }
     }
@@ -45,5 +67,4 @@ struct ClassView: View {
 #Preview {
     ClassView()
         .environment(Preview.vm)
-        .environment(ContenedorSchool(schools: .init(name: "schoolPreview")))
 }

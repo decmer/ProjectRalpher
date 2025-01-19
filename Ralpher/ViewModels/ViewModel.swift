@@ -21,7 +21,14 @@ final class ViewModel: ObservableObject {
 
     var users: UserModel?
     var schools: [SchoolsModel]?
+    var schoolSelected: SchoolsModel? {
+        willSet {
+            classM = nil
+        }
+    }
+
     var classM: [ClassModel]?
+    var classSelected: ClassModel?
     var isAuthenticated: Bool?
     
     var channelUser: RealtimeChannelV2?

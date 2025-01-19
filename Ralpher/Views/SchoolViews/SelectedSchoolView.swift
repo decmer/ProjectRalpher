@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SelectedSchoolView: View {
-    @Environment(ContenedorSchool.self) var school
+    @Environment(ViewModel.self) var vm
 
     struct NavigationItem: Hashable {
         var title: String
@@ -52,7 +52,7 @@ struct SelectedSchoolView: View {
                         Spacer()
                     }
                     Spacer()
-                        .navigationTitle(school.schools.name)
+                        .navigationTitle(vm.schoolSelected?.name ?? "indefinite")
                 }
             }
         }
@@ -69,16 +69,16 @@ struct SelectedSchoolView: View {
     func itemview(_ name: String, nameSimbol: String, width: CGFloat) -> some View {
         RoundedRectangle(cornerRadius: 7)
             .frame(width: 150, height: 100)
-            .foregroundStyle(LinearGradient.harmoniousGradient(baseColor: Color(hex: (school.schools.color ?? Color.blue.toHex())!)))
+            .foregroundStyle(LinearGradient.harmoniousGradient(baseColor: Color(hex: (vm.schoolSelected?.color ?? Color.blue.toHex())!)))
             .overlay {
                 VStack {
                     Spacer()
                     HStack {
                         Image(systemName: nameSimbol)
-                            .foregroundStyle(Color(hex: (school.schools.color ?? Color.blue.toHex())!).contrastingColor())
+                            .foregroundStyle(Color(hex: (vm.schoolSelected?.color ?? Color.blue.toHex())!).contrastingColor())
                         Text(name)
                             .font(.headline)
-                            .foregroundStyle(Color(hex: (school.schools.color ?? Color.blue.toHex())!).contrastingColor())
+                            .foregroundStyle(Color(hex: (vm.schoolSelected?.color ?? Color.blue.toHex())!).contrastingColor())
                     }
                     Spacer()                }
             }
@@ -89,5 +89,4 @@ struct SelectedSchoolView: View {
 #Preview {
     SelectedSchoolView()
         .environment(Preview.vm)
-        .environment(ContenedorSchool(schools: .init(name: "SchoolPreview")))
 }
