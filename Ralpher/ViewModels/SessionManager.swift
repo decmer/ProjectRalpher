@@ -114,16 +114,11 @@ extension ViewModel {
         try await supabase.auth.resend(email: email, type: .signup)
     }
     
-    func restoreSession() async {
-        do {
-            let user = try await supabase.auth.session.user
-            print("Sesión restaurada. Usuario:", user.id)
-            self.users = try await fetchUser(id: user.id)
-            isAuthenticated = true
-        } catch {
-            print(error)
-            isAuthenticated = false
-        }
+    func restoreSession() async throws {
+        let user = try await supabase.auth.session.user
+        print("Sesión restaurada. Usuario:", user.id)
+        self.users = try await fetchUser(id: user.id)
+        isAuthenticated = true
     }
 }
 

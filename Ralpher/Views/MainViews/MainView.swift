@@ -24,6 +24,13 @@ struct MainView: View {
                     }
                     
                     Tab {
+                        CalendarView()
+                    } label: {
+                        Image(systemName: "calendar")
+                        Text("Calendar")
+                    }
+                    
+                    Tab {
                         SettingsView()
                     } label: {
                         Image(systemName: "gearshape")
@@ -40,7 +47,7 @@ struct MainView: View {
                         do {
                             try await vm.restoreSession()
                         } catch {
-                            
+                            vm.isAuthenticated = false
                         }
                     }
                     DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1) {
@@ -57,7 +64,7 @@ struct MainView: View {
                         do {
                             try await vm.restoreSession()
                         } catch {
-                            
+                            vm.isAuthenticated = false
                         }
                     }
                 })

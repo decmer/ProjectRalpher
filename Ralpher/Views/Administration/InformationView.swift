@@ -17,7 +17,7 @@ struct InformationView: View {
     
     var body: some View {
         if vm.schoolSelected != nil {
-            NavigationView {
+            NavigationStack {
                 VStack {
                     Spacer()
                     HStack {
