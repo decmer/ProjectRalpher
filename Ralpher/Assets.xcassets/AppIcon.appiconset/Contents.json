@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Copia de AIQ.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -12,6 +13,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Copia de AIQ-2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -23,6 +25,7 @@
           "value" : "tinted"
         }
       ],
+      "filename" : "Copia de AIQ 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

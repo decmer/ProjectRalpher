@@ -8,7 +8,16 @@
 import Foundation
 
 struct UserModel: Identifiable, Decodable, Encodable {
-    var id: Int?
-    var name: String
-    var surname: String
+    var id: UUID
+    var name: String?
+    var surname: String?
+    var imgname: String?
+    var imgurl: String?
+}
+
+enum RoleSchool: String, CaseIterable {
+    case manager
+    case admin
+    case teacher
+    case student
 }

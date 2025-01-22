@@ -90,7 +90,7 @@ struct SchoolPreview: View {
 
 #Preview {
     SchoolPreview(model: SchoolsModel(name: "Instituto tecnologico pablo de la torre", color: "5c1b6c"))
-        .environment(Preview.vm)
+        .environment(Preview.vm())
         .frame(width: 350, height: 200)
         .padding(.vertical, 12)
 }

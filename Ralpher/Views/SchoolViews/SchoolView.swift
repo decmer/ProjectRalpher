@@ -22,7 +22,14 @@ struct SchoolView: View {
                             NavigationLink {
                                 SelectedSchoolView()
                                     .onAppear {
-                                        vm.schoolSelected = school
+                                        Task {
+                                            do {
+                                                vm.schoolSelected = school
+                                                try await vm.fetchUseersToSchools(school.id!)
+                                            } catch {
+                                                print("Error: \(error)")
+                                            }
+                                        }
                                     }
                             } label: {
                                 SchoolPreview(model: school)
@@ -82,5 +89,5 @@ struct SchoolView: View {
 
 #Preview {
     SchoolView()
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

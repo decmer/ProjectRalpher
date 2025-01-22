@@ -66,5 +66,5 @@ struct ClassAddView: View {
 #Preview {
     @Previewable @State var bool = true
     ClassAddView(isPresented: $bool)
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

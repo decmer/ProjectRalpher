@@ -99,5 +99,5 @@ struct SchoolCreateView: View {
 
 #Preview {
     SchoolCreateView(isPresented: .constant(true))
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

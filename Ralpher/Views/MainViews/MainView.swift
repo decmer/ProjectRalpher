@@ -24,18 +24,7 @@ struct MainView: View {
                     }
                     
                     Tab {
-                        NavigationStack {
-                            Text("In Building")
-                                .toolbar {
-                                    ToolbarItem(placement: .navigationBarTrailing) {
-                                        Button("Logout") {
-                                            Task {
-                                                await vm.logoutUser()
-                                            }
-                                        }
-                                    }
-                                }
-                        }
+                        SettingsView()
                     } label: {
                         Image(systemName: "gearshape")
                         Text("Settings")
@@ -80,5 +69,5 @@ struct MainView: View {
 
 #Preview {
     MainView()
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

@@ -66,5 +66,5 @@ struct ClassView: View {
 
 #Preview {
     ClassView()
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

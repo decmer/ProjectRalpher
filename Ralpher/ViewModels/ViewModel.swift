@@ -26,7 +26,7 @@ final class ViewModel: ObservableObject {
             classM = nil
         }
     }
-
+    var userToSchool: [(UserModel, RoleSchool)]?
     var classM: [ClassModel]?
     var classSelected: ClassModel?
     var isAuthenticated: Bool?
@@ -43,10 +43,10 @@ final class ViewModel: ObservableObject {
             await subscribeToUserUpdates()
         }
         Task {
-            await subscribeToSchoolsUpdates()
+            await subscribeToSchools()
         }
         Task {
-            await subscribeToClassUpdates()
+            await subscribeToClass()
         }
     }
     

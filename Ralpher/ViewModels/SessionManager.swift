@@ -30,7 +30,7 @@ extension ViewModel {
             return
         }
         
-        try await supabase.auth.signInWithIdToken(
+        let session = try await supabase.auth.signInWithIdToken(
             credentials: .init(
                 provider: .apple,
                 idToken: idToken
@@ -44,7 +44,7 @@ extension ViewModel {
                 print("Error al obtener las escuelas:", error.localizedDescription)
             }
         }
-        
+        self.users = try await fetchUser(id: session.user.id)
         isAuthenticated = true
     }
     
@@ -67,13 +67,14 @@ extension ViewModel {
 
         let accessToken = result.user.accessToken.tokenString
 
-        try await supabase.auth.signInWithIdToken(
+        let session = try await supabase.auth.signInWithIdToken(
           credentials: OpenIDConnectCredentials(
             provider: .google,
             idToken: idToken,
             accessToken: accessToken
           )
         )
+        self.users = try await fetchUser(id: session.user.id)
         isAuthenticated = true
     }
     
@@ -83,6 +84,7 @@ extension ViewModel {
             isAuthenticated = true
             print("Sesión iniciada. Token de acceso:", session.accessToken)
             print("Id: ", session.user.id)
+            self.users = try await fetchUser(id: session.user.id)
         } catch {
             mesageError.wrappedValue = error.localizedDescription
             print("Error al iniciar sesión:", error.localizedDescription)
@@ -116,8 +118,10 @@ extension ViewModel {
         do {
             let user = try await supabase.auth.session.user
             print("Sesión restaurada. Usuario:", user.id)
+            self.users = try await fetchUser(id: user.id)
             isAuthenticated = true
         } catch {
+            print(error)
             isAuthenticated = false
         }
     }

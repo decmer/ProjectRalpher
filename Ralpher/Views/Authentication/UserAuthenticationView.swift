@@ -85,5 +85,5 @@ struct UserAuthenticationView: View {
 
 #Preview {
     UserAuthenticationView()
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

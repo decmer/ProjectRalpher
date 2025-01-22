@@ -31,7 +31,7 @@ struct SelectedSchoolView: View {
         NavigationItem(title: "Schedule", symbolName: "calendar", destination: AnyView(ScheduleView())),
         NavigationItem(title: "Release", symbolName: "arrow.up.circle", destination: AnyView(Text("Release"))),
         NavigationItem(title: "Fouls", symbolName: "exclamationmark.circle", destination: AnyView(Text("Fouls"))),
-        NavigationItem(title: "Information", symbolName: "info.circle", destination: AnyView(Text("Information"))),
+        NavigationItem(title: "Information", symbolName: "info.circle", destination: AnyView(InformationView())),
         NavigationItem(title: "Incidents", symbolName: "exclamationmark.triangle", destination: AnyView(Text("Incidents")))
     ]
     
@@ -88,5 +88,5 @@ struct SelectedSchoolView: View {
 
 #Preview {
     SelectedSchoolView()
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

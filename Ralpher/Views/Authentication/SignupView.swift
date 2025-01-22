@@ -68,5 +68,5 @@ struct SignupView: View {
 
 #Preview {
     SignupView(isPresented: .constant(false))
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }

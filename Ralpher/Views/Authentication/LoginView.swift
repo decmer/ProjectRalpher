@@ -85,6 +85,6 @@ struct LoginView: View {
 
 #Preview {
     LoginView(isPresented: .constant(true), showAlertMesage: .constant(""))
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }
 

@@ -49,5 +49,5 @@ struct JoinSchoolView: View {
 
 #Preview {
     JoinSchoolView(isPresented: .constant(true))
-        .environment(Preview.vm)
+        .environment(Preview.vm())
 }
