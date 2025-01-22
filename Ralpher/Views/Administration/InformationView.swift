@@ -24,7 +24,7 @@ struct InformationView: View {
                         Text("Code")
                         Spacer()
                         if code != nil, codeVisibility {
-                            Text(code!)
+                            CopyableTextView(code!)
                                 .frame(width: 150)
                         } else {
                             RoundedRectangle(cornerRadius: 20)

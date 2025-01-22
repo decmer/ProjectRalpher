@@ -36,7 +36,7 @@ struct UsersView: View {
     
     func userPreview(user: UserModel) -> some View {
         HStack {
-            AsyncImage(url: URL(string: vm.users?.imgurl ?? "https://xvkymhtcipdbdanikzpq.supabase.co/storage/v1/object/public/img/userProfileBasic.png?t=2025-01-21T18%3A49%3A17.726Z")) { image in
+            AsyncImage(url: URL(string: user.imgurl ?? "https://xvkymhtcipdbdanikzpq.supabase.co/storage/v1/object/public/img/userProfileBasic.png?t=2025-01-21T18%3A49%3A17.726Z")) { image in
                 image
                     .resizable()
                     .scaledToFill()

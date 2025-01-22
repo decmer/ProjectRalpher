@@ -74,6 +74,33 @@ struct SchoolView: View {
                     .onAppear {
                         Task { do { try await vm.fetchSchools() } catch { print(error) } }
                     }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Menu {
+                                Button {
+                                    isPresentedCreateView = true
+                                } label: {
+                                    Text("Create School")
+                                }
+                                Button {
+                                    withAnimation {
+                                        isPresentedJoinView = true
+                                    }
+                                } label: {
+                                    Text("Join School")
+                                }
+                            } label: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $isPresentedCreateView) {
+                        SchoolCreateView(isPresented: $isPresentedCreateView)
+                    }
+                    .sheet(isPresented: $isPresentedJoinView) {
+                        JoinSchoolView(isPresented: $isPresentedJoinView)
+                            .presentationDetents([.fraction(0.12)])
+                    }
                     .navigationTitle("Schools")
                 Button {
                     Task { do { try await vm.fetchSchools() } catch { print(error) } }
