@@ -15,9 +15,18 @@ struct UserModel: Identifiable, Decodable, Encodable {
     var imgurl: String?
 }
 
-enum RoleSchool: String, CaseIterable {
+enum RoleSchool: String, CaseIterable, Hashable {
     case manager
     case admin
     case teacher
     case student
 }
+
+//enum RoleSchool: String, CaseIterable, Hashable, Identifiable {
+//    case manager = "Manager"
+//    case admin = "Admin"
+//    case teacher = "Teacher"
+//    case student = "Student"
+//
+//    var id: String { self.rawValue } // Para conformar con Identifiable
+//}

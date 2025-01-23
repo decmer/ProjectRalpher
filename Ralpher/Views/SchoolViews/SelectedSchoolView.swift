@@ -32,11 +32,11 @@ struct SelectedSchoolView: View {
         NavigationItem(title: "Release", symbolName: "arrow.up.circle", destination: AnyView(Text("Release"))),
         NavigationItem(title: "Fouls", symbolName: "exclamationmark.circle", destination: AnyView(Text("Fouls"))),
         NavigationItem(title: "Information", symbolName: "info.circle", destination: AnyView(InformationView())),
-        NavigationItem(title: "Incidents", symbolName: "exclamationmark.triangle", destination: AnyView(Text("Incidents")))
+        NavigationItem(title: "Incidents", symbolName: "exclamationmark.triangle", destination: AnyView(Text("Incidents"))),
+        NavigationItem(title: "Courses", symbolName: "person.3.sequence.fill", destination: AnyView(Text("Courses"))),
+        NavigationItem(title: "school grades", symbolName: "person.3.sequence.fill", destination: AnyView(Text("school grades")))
     ]
-    
-    let color = Color.orange
-    
+        
     var body: some View {
         GeometryReader { geometry in
             NavigationStack {
@@ -46,13 +46,40 @@ struct SelectedSchoolView: View {
                         Spacer()
                         LazyAdapList(preferredWidth: 150) {
                             ForEach($titles, id: \.self) { title in
-                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                if let role = vm.roleSchoolSelected {
+                                    switch role {
+                                        case .manager, .admin:
+                                            if title.title.wrappedValue != "school grades" {
+                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                            }
+                                        case .teacher:
+                                            if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Information" && title.title.wrappedValue != "school grades" {
+                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                            }
+                                        case .student:
+                                            if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Users" && title.title.wrappedValue != "Information" {
+                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                            }
+                                        }
+                                } else {
+                                    item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                }
                             }
                         }
                         Spacer()
                     }
                     Spacer()
                         .navigationTitle(vm.schoolSelected?.name ?? "indefinite")
+                }
+                
+            }
+            .overlay {
+                VStack {
+                    Spacer()
+                    if let role = vm.roleSchoolSelected?.rawValue {
+                        Text("role: \(role)")
+                            .font(.caption2)
+                    }
                 }
             }
         }

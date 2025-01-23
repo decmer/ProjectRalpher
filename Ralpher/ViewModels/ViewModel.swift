@@ -26,13 +26,14 @@ final class ViewModel: ObservableObject {
             classM = nil
         }
     }
+    var roleSchoolSelected: RoleSchool?
     var userToSchool: [(UserModel, RoleSchool)]?
     var classM: [ClassModel]?
     var classSelected: ClassModel?
     var isAuthenticated: Bool?
-    
     var channelUser: RealtimeChannelV2?
     var channelSchools: RealtimeChannelV2?
+    
     
     init(users: UserModel? = nil, schools: [SchoolsModel]? = nil, isAuthenticated: Bool? = nil, channelUser: RealtimeChannelV2? = nil) {
         self.users = users

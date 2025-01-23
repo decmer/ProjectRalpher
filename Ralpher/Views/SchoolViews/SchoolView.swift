@@ -26,6 +26,7 @@ struct SchoolView: View {
                                             do {
                                                 vm.schoolSelected = school
                                                 try await vm.fetchUseersToSchools(school.id!)
+                                                vm.roleSchoolSelected = try await vm.fetchRoleToSchools(school.id!)
                                             } catch {
                                                 print("Error: \(error)")
                                             }

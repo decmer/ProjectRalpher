@@ -24,7 +24,11 @@ struct UsersView: View {
                     if let users = groupedUsers[role], !users.isEmpty {
                         Section(header: Text(role.rawValue.capitalized)) {
                             ForEach(users) { user in
-                                userPreview(user: user)
+                                NavigationLink {
+                                    UserView(user: user)
+                                } label: {
+                                    userPreview(user: user)
+                                }
                             }
                         }
                     }

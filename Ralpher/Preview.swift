@@ -25,6 +25,7 @@ final class Preview {
         vm.userToSchool?.append((.init(id: UUID(), name: "Francisco jimenez clavijo"), .teacher))
         vm.userToSchool?.append((.init(id: UUID(), name: "jose rueda sanchez"), .teacher))
         vm.userToSchool?.append((.init(id: UUID(), name: "Juancarlos salazar holmo"), .teacher))
+        vm.roleSchoolSelected = .student
         return vm
     }
 
