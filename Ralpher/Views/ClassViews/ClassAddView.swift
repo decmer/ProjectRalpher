@@ -46,8 +46,9 @@ struct ClassAddView: View {
                         Task {
                             do {
                                 try await vm.createClass(.init(name: name, description: description, id_school: vm.schoolSelected?.id, color: color.toHex(), timeperweek: timePerWeek))
+                                isPresented = false
                             } catch {
-                                print(error)
+                                vm.messageError = error.localizedDescription
                             }
                         }
                     }

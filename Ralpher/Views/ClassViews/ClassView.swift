@@ -25,9 +25,6 @@ struct ClassView: View {
                         }
                     }
                 }
-                .onAppear {
-                    Task { do { try await vm.fetchClass() } catch { print(error) } }
-                }
                 .padding(7)
                 .navigationBarTitle("Class")
                 .toolbar(content: {
@@ -41,7 +38,7 @@ struct ClassView: View {
             } else {
                 Text("There are no classes")
                     .onAppear {
-                        Task { do { try await vm.fetchClass() } catch { print(error) } }
+                        Task { do { try await vm.fetchClass() } catch { vm.messageError = error.localizedDescription } }
                     }
                     .navigationBarTitle("Class")
                     .toolbar(content: {
@@ -53,7 +50,7 @@ struct ClassView: View {
                         ClassAddView(isPresented: $isAdd)
                     }
                 Button {
-                    Task { do { try await vm.fetchClass() } catch { print(error) } }
+                    Task { do { try await vm.fetchClass() } catch { vm.messageError = error.localizedDescription } }
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .foregroundStyle(.blue)

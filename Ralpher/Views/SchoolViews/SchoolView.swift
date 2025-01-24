@@ -16,20 +16,15 @@ struct SchoolView: View {
     var body: some View {
         NavigationStack {
             if let schools = vm.schools, !schools.isEmpty {
-                ScrollView {
-                    LazyVGrid(columns: [GridItem()]) {
+                    LazyAdapList(preferredWidth: 350) {
                         ForEach(schools) { school in
                             NavigationLink {
-                                SelectedSchoolView()
+                                SelectedSchoolView(name: school.name)
                                     .onAppear {
-                                        Task {
-                                            do {
-                                                vm.schoolSelected = school
-                                                try await vm.fetchUseersToSchools(school.id!)
-                                                vm.roleSchoolSelected = try await vm.fetchRoleToSchools(school.id!)
-                                            } catch {
-                                                print("Error: \(error)")
-                                            }
+                                        if let index = vm.cache.firstIndex(where: { $0.0.id == school.id! }) {
+                                            vm.schoolSelected = school
+                                            vm.roleSchoolSelected = vm.cache[index].1
+                                            vm.userToSchool = vm.cache[index].2
                                         }
                                     }
                             } label: {
@@ -37,9 +32,31 @@ struct SchoolView: View {
                                     .frame(width: 350, height: 200)
                                     .padding(.vertical, 12)
                             }
+                            .onDisappear {
+                                Task {
+                                    if let index = vm.cache.firstIndex(where: { $0.0.id == school.id! }) {
+                                        vm.cache.remove(at: index)
+                                    }
+                                }
+                            }
+                            .onAppear {
+                                Task {
+                                    do {
+                                        let userToSchool = try await vm.fetchUseersToSchools(school.id!)
+                                        let roleSchoolSelected: RoleSchool = try await vm.fetchRoleToSchools(school.id!) ?? .student
+                                        vm.cache.append((school, roleSchoolSelected, userToSchool))
+                                    } catch {
+                                        vm.messageError = error.localizedDescription
+                                    }
+                                }
+                            }
                         }
                     }
-                }
+                    .onAppear {
+                        vm.schoolSelected = nil
+                        vm.userToSchool = nil
+                        vm.roleSchoolSelected = nil
+                    }
                 .navigationTitle("Schools")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -61,7 +78,7 @@ struct SchoolView: View {
                         }
                     }
                 }
-                .refreshable { Task { do { try await vm.fetchSchools() } catch { print(error) } } }
+                .refreshable { Task { do { try await vm.fetchSchools() } catch { vm.messageError = error.localizedDescription } } }
                 .sheet(isPresented: $isPresentedCreateView) {
                     SchoolCreateView(isPresented: $isPresentedCreateView)
                 }
@@ -73,7 +90,7 @@ struct SchoolView: View {
             } else {
                 Text("There are no Schools")
                     .onAppear {
-                        Task { do { try await vm.fetchSchools() } catch { print(error) } }
+                        Task { do { try await vm.fetchSchools() } catch { vm.messageError = error.localizedDescription } }
                     }
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
@@ -104,7 +121,7 @@ struct SchoolView: View {
                     }
                     .navigationTitle("Schools")
                 Button {
-                    Task { do { try await vm.fetchSchools() } catch { print(error) } }
+                    Task { do { try await vm.fetchSchools() } catch { vm.messageError = error.localizedDescription } }
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .foregroundStyle(.blue)

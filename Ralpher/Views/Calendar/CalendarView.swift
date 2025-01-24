@@ -123,7 +123,6 @@ struct CalendarView: View {
                             if day != Date.distantPast { // No mostrar los días vacíos
                                 Button(action: {
                                     selectedDate = day
-                                    print(day)
                                 }) {
                                     VStack {
                                         Text("\(calendar.component(.day, from: day))")

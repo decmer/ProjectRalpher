@@ -44,7 +44,7 @@ func generarHorario(cursos: [Curso], profesores: [Profesor]) {
 
     for curso in cursos {
         for i in 0..<curso.clases.count {
-            var clase = curso.clases[i]
+            let clase = curso.clases[i]
             var horasRestantes = clase.horasSemanales
             var diaIndex = 0
             var horaActual = horarioInicio

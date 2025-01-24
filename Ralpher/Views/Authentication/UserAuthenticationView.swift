@@ -11,7 +11,6 @@ import _AuthenticationServices_SwiftUI
 struct UserAuthenticationView: View {
     @Environment(ViewModel.self) var vm
     @State var isLoginPresented: Bool = true
-    @State var message: String?
 
     var body: some View {
         NavigationStack {
@@ -20,7 +19,7 @@ struct UserAuthenticationView: View {
                 
                 ZStack {
                     if isLoginPresented {
-                        LoginView(isPresented: $isLoginPresented, showAlertMesage: $message)
+                        LoginView(isPresented: $isLoginPresented)
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     } else {
                         SignupView(isPresented: $isLoginPresented)
@@ -42,8 +41,7 @@ struct UserAuthenticationView: View {
                             do {
                                 try await vm.authenticateWithApple(result)
                             } catch {
-                                message = error.localizedDescription
-                                
+                                vm.messageError = error.localizedDescription
                             }
                         }
                     }
@@ -56,8 +54,7 @@ struct UserAuthenticationView: View {
                         do {
                             try await vm.googleSignIn()
                         } catch {
-                            message = error.localizedDescription
-                            print(message!)
+                            vm.messageError = error.localizedDescription
                         }
                     }
                 }) {
@@ -79,7 +76,7 @@ struct UserAuthenticationView: View {
             }
             .navigationTitle(isLoginPresented ? "Login" : "Sign Up")
         }
-        .modifier(FloatingMessageModifier(message: $message))
+        .modifier(FloatingMessageModifier())
     }
 }
 

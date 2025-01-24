@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct FloatingMessageModifier: ViewModifier {
-    @Binding var message: String?
+    @Environment(ViewModel.self) var vm
+
     @State private var isVisible: Bool = false
 
     func body(content: Content) -> some View {
         ZStack(alignment: .topTrailing) {
             content
 
-            if let message = message {
+            if let message = vm.messageError {
                 Text(message)
                     .padding()
                     .background(Color.orange)
@@ -32,7 +33,7 @@ struct FloatingMessageModifier: ViewModifier {
                                         self.isVisible = false
                                     }
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                        self.message = nil
+                                        self.vm.messageError = nil
                                     }
                                 }
                             }
@@ -41,6 +42,7 @@ struct FloatingMessageModifier: ViewModifier {
                         withAnimation {
                             isVisible = true
                         }
+                        print(message)
                         DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
                             withAnimation {
                                 if isVisible {
@@ -48,7 +50,7 @@ struct FloatingMessageModifier: ViewModifier {
                                         isVisible = false
                                     }
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                        self.message = nil
+                                        self.vm.messageError = nil
                                     }
                                 }
                             }
@@ -66,5 +68,5 @@ struct FloatingMessageModifier: ViewModifier {
     NavigationStack {
         Text("hoolla")
     }
-        .modifier(FloatingMessageModifier(message: .constant("Error en el inicio de secion")))
+        .modifier(FloatingMessageModifier())
 }

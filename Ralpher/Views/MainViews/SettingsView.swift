@@ -12,6 +12,7 @@ struct SettingsView: View {
     @Environment(ViewModel.self) var vm
     
     @State var selectedItem: PhotosPickerItem?
+    @State var showAlert = false
     
     var body: some View {
         NavigationStack {
@@ -28,16 +29,37 @@ struct SettingsView: View {
                             do {
                                 try await vm.uploadImage(data, name: "")
                             } catch {
-                                print(error)
+                                vm.messageError = error.localizedDescription
                             }
                         }
                     }
+                }
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Force Logout"),
+                        message: Text("Do you want to force the logout?"),
+                        primaryButton: .destructive(Text("Yes")) {
+                            Task {
+                                do {
+                                    try await vm.forceLogout()
+                                } catch {
+                                    vm.messageError = error.localizedDescription
+                                }
+                            }
+                        },
+                        secondaryButton: .cancel()
+                    )
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Logout") {
                             Task {
-                                await vm.logoutUser()
+                                do {
+                                    try await vm.logoutUser()
+                                } catch {
+                                    showAlert = true
+                                    vm.messageError = error.localizedDescription
+                                }
                             }
                         }
                     }

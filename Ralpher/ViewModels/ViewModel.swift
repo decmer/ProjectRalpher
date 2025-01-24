@@ -34,12 +34,17 @@ final class ViewModel: ObservableObject {
     var channelUser: RealtimeChannelV2?
     var channelSchools: RealtimeChannelV2?
     
+    var cache: [(SchoolsModel, RoleSchool, [(UserModel, RoleSchool)])]
+    
+    var messageError: String?
+    
     
     init(users: UserModel? = nil, schools: [SchoolsModel]? = nil, isAuthenticated: Bool? = nil, channelUser: RealtimeChannelV2? = nil) {
         self.users = users
-        self.schools = schools
+        self.schools = []
         self.isAuthenticated = isAuthenticated
         self.channelUser = channelUser
+        self.cache = []
         Task {
             await subscribeToUserUpdates()
         }

@@ -11,7 +11,6 @@ struct LoginView: View {
     @Environment(ViewModel.self) var vm
     
     @Binding var isPresented: Bool
-    @Binding var showAlertMesage: String?
     
     @State var pasword = ""
     @State var mail = ""
@@ -41,7 +40,11 @@ struct LoginView: View {
             
             Button(action: {
                 Task {
-                    await vm.loginUser(email: mail, password: pasword, mesageError: $showAlertMesage)
+                    do {
+                        try await vm.loginUser(email: mail, password: pasword)
+                    } catch {
+                        vm.messageError = "Error al iniciar sesión:" + error.localizedDescription
+                    }
                 }
             }) {
                 Text("Login")
@@ -84,7 +87,7 @@ struct LoginView: View {
 
 
 #Preview {
-    LoginView(isPresented: .constant(true), showAlertMesage: .constant(""))
+    LoginView(isPresented: .constant(true))
         .environment(Preview.vm())
 }
 

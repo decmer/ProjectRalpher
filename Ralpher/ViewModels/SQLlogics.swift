@@ -23,7 +23,7 @@ extension ViewModel {
     }
     
     /// funcion para ver todos los usuarios pertenecientes a esta escuela
-    func fetchUseersToSchools(_ idSchool: Int) async throws {
+    func fetchUseersToSchools(_ idSchool: Int) async throws -> [(UserModel, RoleSchool)] {
         let result: [[String: AnyJSON]] = try await supabase.database.from("users_schools").select("user_id, role").eq("school_id", value: idSchool).execute().value
         var userToSchoolAux = [(UserModel, RoleSchool)]()
         for item in result {
@@ -31,7 +31,7 @@ extension ViewModel {
             let role = item["role"]?.stringValue ?? ""
             await userToSchoolAux.append((try fetchUser(id: UUID(uuidString: id)!)!, RoleSchool(rawValue: role)!))
         }
-        self.userToSchool = userToSchoolAux
+        return userToSchoolAux
     }
     
     /// funcion para saber el rol del usuario en la escuela
@@ -82,11 +82,25 @@ extension ViewModel {
     }
     
     func dropOutOfSchool(_ school: SchoolsModel) async throws {
-        try await supabase.database
-            .from("users_schools")
-            .delete()
-            .eq("school_id", value: school.id!)
-            .execute()
+        if let id = users?.id {
+            try await supabase.database
+                .from("users_schools")
+                .delete()
+                .eq("school_id", value: school.id!)
+                .eq("user_id", value: id)
+                .execute()
+        }
+    }
+    
+    func deleteUserSchool(_ user: UserModel) async throws {
+        if let id = schoolSelected?.id {
+            try await supabase.database
+                .from("users_schools")
+                .delete()
+                .eq("school_id", value: id)
+                .eq("user_id", value: user.id)
+                .execute()
+        }
     }
     
     func createClass(_ classM: ClassModel) async throws {

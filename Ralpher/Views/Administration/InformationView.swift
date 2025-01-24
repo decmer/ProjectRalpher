@@ -44,7 +44,7 @@ struct InformationView: View {
                                     do {
                                         code = try await vm.fetchSchoolsKey()
                                     } catch {
-                                        print(error)
+                                        vm.messageError = error.localizedDescription
                                     }
                                     withAnimation {
                                         codeVisibility = true
@@ -90,7 +90,7 @@ struct InformationView: View {
                             do {
                                 try await vm.updateSchool()
                             } catch {
-                                print(error)
+                                vm.messageError = error.localizedDescription
                             }
                         }
                     } label: {

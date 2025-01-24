@@ -43,6 +43,7 @@ struct MainView: View {
                         }
                         .tag(2)
                 }
+                .modifier(FloatingMessageModifier())
             } else {
                 UserAuthenticationView()
             }

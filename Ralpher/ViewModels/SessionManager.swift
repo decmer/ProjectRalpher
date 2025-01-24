@@ -78,27 +78,47 @@ extension ViewModel {
         isAuthenticated = true
     }
     
-    func loginUser(email: String, password: String, mesageError: Binding<String?>) async {
-        do {
-            let session = try await supabase.auth.signIn(email: email, password: password)
-            isAuthenticated = true
-            print("Sesión iniciada. Token de acceso:", session.accessToken)
-            print("Id: ", session.user.id)
-            self.users = try await fetchUser(id: session.user.id)
-        } catch {
-            mesageError.wrappedValue = error.localizedDescription
-            print("Error al iniciar sesión:", error.localizedDescription)
-        }
+    func loginUser(email: String, password: String) async throws {
+        let session = try await supabase.auth.signIn(email: email, password: password)
+        isAuthenticated = true
+        print("Sesión iniciada. Token de acceso:", session.accessToken)
+        print("Id: ", session.user.id)
+        self.users = try await fetchUser(id: session.user.id)
     }
     
-    func logoutUser() async {
-        do {
-            try await supabase.auth.signOut()
-            isAuthenticated = false
-            print("Sesión cerrada.")
-        } catch {
-            print("Error al cerrar sesión:", error.localizedDescription)
+    func logoutUser() async throws {
+        try await supabase.auth.signOut()
+        isAuthenticated = false
+    }
+    func isSessionValid() async throws -> Bool {
+        guard let expiresAt = try await supabase.auth.session.expiresAt else {
+            return false
         }
+        // Comparar la fecha actual (en segundos desde la época Unix) con la fecha de expiración
+        return Date().timeIntervalSince1970 < expiresAt
+    }
+    func forceLogout() async throws {
+        try await supabase.auth.signOut()
+
+        // Elimina datos locales de la sesión
+        clearUserDefaults()
+
+        // Marcar como no autenticado
+        isAuthenticated = false
+
+        // Refresca la sesión para asegurarse de que se elimina todo
+        try await refreshSession()
+    }
+
+    func clearUserDefaults() {
+        // Elimina cualquier rastro de la sesión en UserDefaults
+        UserDefaults.standard.removeObject(forKey: "user_id")
+        UserDefaults.standard.removeObject(forKey: "access_token")
+        UserDefaults.standard.synchronize()
+    }
+
+    func refreshSession() async throws {
+        try await supabase.auth.refreshSession()
     }
     
     func resetPassword(email: String) async {

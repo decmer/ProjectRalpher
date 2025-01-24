@@ -81,7 +81,7 @@ struct SchoolPreview: View {
             do {
                 try await vm.dropOutOfSchool(model)
             } catch {
-                print(error.localizedDescription)
+                vm.messageError = error.localizedDescription
             }
         }
         

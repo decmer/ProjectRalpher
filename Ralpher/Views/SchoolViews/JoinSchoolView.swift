@@ -29,7 +29,7 @@ struct JoinSchoolView: View {
                         do {
                             try await vm.addUserToSchool(codeJoinSchool)
                         } catch {
-                            print(error.localizedDescription)
+                            vm.messageError = error.localizedDescription
                         }
                     }
                     isPresented = false

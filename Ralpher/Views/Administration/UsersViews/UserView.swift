@@ -60,7 +60,7 @@ struct UserView: View {
                                 lastRole = role
                             } catch {
                                 role = roleAux
-                                print(error)
+                                vm.messageError = error.localizedDescription
                             }
                         }
                     }
@@ -99,7 +99,31 @@ struct UserView: View {
                     Spacer()
                 }
             }
+            .toolbar {
+                if isPermisedToDeleteUserSchool() {
+                    Button {
+                        Task {
+                            do {
+                                try await vm.deleteUserSchool(user)
+                            } catch {
+                                vm.messageError = error.localizedDescription
+                            }
+                        }
+                    } label: {
+                        Text("Expel \(roleAux.rawValue)")
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+                }
+            }
         }
+    }
+    
+    func isPermisedToDeleteUserSchool() -> Bool {
+        if  let myRole = vm.roleSchoolSelected, role == .manager, myRole == .manager || myRole == .admin {
+            return false
+        }
+        return true
     }
     
     enum OptionProfileView: String, CaseIterable, Hashable {
@@ -111,6 +135,6 @@ struct UserView: View {
 }
 
 #Preview {
-    UserView(user: .init(id: .init(), name: "jose", surname: "decena"), role: .admin)
+    UserView(user: .init(id: .init(), name: "jose", surname: "decena"), role: .student)
         .environment(Preview.vm())
 }

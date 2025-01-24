@@ -25,6 +25,8 @@ struct SelectedSchoolView: View {
             }
     }
     
+    let name: String
+    
     @State var titles: [NavigationItem] = [
         NavigationItem(title: "Class", symbolName: "graduationcap", destination: AnyView(ClassView())),     // Clases
         NavigationItem(title: "Users", symbolName: "person.2", destination: AnyView(UsersView())),          // Usuarios
@@ -48,30 +50,30 @@ struct SelectedSchoolView: View {
                             ForEach($titles, id: \.self) { title in
                                 if let role = vm.roleSchoolSelected {
                                     switch role {
-                                        case .manager, .admin:
-                                            if title.title.wrappedValue != "school grades" {
-                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                            }
-                                        case .teacher:
-                                            if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Information" && title.title.wrappedValue != "school grades" {
-                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                            }
-                                        case .student:
-                                            if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Users" && title.title.wrappedValue != "Information" {
-                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                            }
+                                    case .manager, .admin:
+                                        if title.title.wrappedValue != "school grades" {
+                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
                                         }
-                                } else {
-                                    item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                    case .teacher:
+                                        if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Information" && title.title.wrappedValue != "school grades" {
+                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                        }
+                                    case .student:
+                                        if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Users" && title.title.wrappedValue != "Information" {
+                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                        }
+                                    }
                                 }
                             }
                         }
                         Spacer()
                     }
                     Spacer()
-                        .navigationTitle(vm.schoolSelected?.name ?? "indefinite")
+                        .navigationTitle(vm.schoolSelected?.name ?? name)
                 }
-                
+            }
+            .onAppear {
+                Task { do { try await vm.fetchClass() } catch { vm.messageError = error.localizedDescription } }
             }
             .overlay {
                 VStack {
@@ -83,6 +85,7 @@ struct SelectedSchoolView: View {
                 }
             }
         }
+
     }
     
     func item(_ name: String, nameSimbol: String, view: some View, width: CGFloat)-> some View {
@@ -111,9 +114,23 @@ struct SelectedSchoolView: View {
             }
         
     }
+    
+//    var progress: Double {
+//        let totalVariables = 3.0
+//        let filledVariables = [vm.userToSchool, vm.roleSchoolSelected, vm.schoolSelected].compactMap { $0 }.count
+//        return Double(filledVariables) / totalVariables
+//    }
+//    
+    var progress: Double {
+        var count = 0
+        if vm.userToSchool != nil { count += 1 }
+        if vm.roleSchoolSelected != nil { count += 1 }
+        if vm.schoolSelected != nil { count += 1 }
+        return Double(count) / 3.0
+    }
 }
 
 #Preview {
-    SelectedSchoolView()
+    SelectedSchoolView(name: "pepe")
         .environment(Preview.vm())
 }

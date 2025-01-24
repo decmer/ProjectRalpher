@@ -88,7 +88,7 @@ struct SchoolCreateView: View {
                         try await vm.createSchool(SchoolsModel(name: name, color: color.toHex()))
                         
                     } catch {
-                        print(error.localizedDescription)
+                        vm.messageError = error.localizedDescription
                     }
                 }
                 isPresented = false

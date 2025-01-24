@@ -50,7 +50,11 @@ extension ViewModel {
                     if self.users?.id == oldUser.id {
                         self.users = nil
                         Task {
-                            await self.logoutUser()
+                            do {
+                                try await self.logoutUser()
+                            } catch {
+                                self.messageError = error.localizedDescription
+                            }
                         }
                     } else if let usersToSchool = self.userToSchool {
                         self.userToSchool = usersToSchool.filter { (user, role) in
@@ -126,10 +130,17 @@ extension ViewModel {
 
         Task {
             for await insertAction in insertStream {
+                let newUserSchool = await self.convertDicToUsersSchools(insertAction.record)
                 if self.userToSchool != nil {
-                    let newUserSchool = await self.convertDicToUsersSchools(insertAction.record)
                     if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
                         self.userToSchool?.append((newUserSchool.0, newUserSchool.1))
+                    }
+                }
+                if newUserSchool?.0.id == self.users?.id {
+                    do {
+                        try await fetchSchools()
+                    } catch {
+                        messageError = error.localizedDescription
                     }
                 }
             }
@@ -156,14 +167,22 @@ extension ViewModel {
         }
     
         Task {
-            for await deleteAction in deleteStream {
-                if self.userToSchool != nil {
-                    let newUserSchool = await self.convertDicToUsersSchools(deleteAction.oldRecord)
-                    if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
-                        self.userToSchool?.removeAll(where: { (user, _) in
-                            user.id == newUserSchool.0.id
-                        })
+            for await _ in deleteStream {
+//                if self.userToSchool != nil {
+//                    let newUserSchool = await self.convertDicToUsersSchools(deleteAction.oldRecord)
+//                    if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
+//                        self.userToSchool?.removeAll(where: { (user, _) in
+//                            user.id == newUserSchool.0.id
+//                        })
+//                    }
+//                }
+                do {
+                    try await fetchSchools()
+                    if self.userToSchool != nil, let schoolSelectedID = self.schoolSelected?.id {
+                        self.userToSchool = try await fetchUseersToSchools(schoolSelectedID)
                     }
+                } catch {
+                    messageError = error.localizedDescription
                 }
             }
         }
