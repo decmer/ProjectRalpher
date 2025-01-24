@@ -7,35 +7,41 @@
 
 import SwiftUI
 
+class TabViewModel: ObservableObject {
+    @Published var selectedTab: Int = 0
+}
+
 struct MainView: View {
     @Environment(ViewModel.self) var vm
     
     @State var sessionRetry = false
+    @StateObject var tabViewModel = TabViewModel()
 
     var body: some View {
         if let isAuthenticated = vm.isAuthenticated {
             if isAuthenticated {
-                TabView {
-                    Tab {
-                        SchoolView()
-                    } label: {
-                        Image(systemName: "house")
-                        Text("Home")
-                    }
-                    
-                    Tab {
-                        CalendarView()
-                    } label: {
-                        Image(systemName: "calendar")
-                        Text("Calendar")
-                    }
-                    
-                    Tab {
-                        SettingsView()
-                    } label: {
-                        Image(systemName: "gearshape")
-                        Text("Settings")
-                    }
+                TabView(selection: $tabViewModel.selectedTab) {
+                    SchoolView()
+                        .environmentObject(tabViewModel)
+                        .tabItem {
+                            Image(systemName: "house")
+                            Text("Home")
+                        }
+                        .tag(0)
+
+                    CalendarView()
+                        .tabItem {
+                            Image(systemName: "calendar")
+                            Text("Calendar")
+                        }
+                        .tag(1)
+
+                    SettingsView()
+                        .tabItem {
+                            Image(systemName: "gearshape")
+                            Text("Settings")
+                        }
+                        .tag(2)
                 }
             } else {
                 UserAuthenticationView()

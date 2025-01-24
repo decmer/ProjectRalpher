@@ -123,20 +123,21 @@ struct CalendarView: View {
                             if day != Date.distantPast { // No mostrar los días vacíos
                                 Button(action: {
                                     selectedDate = day
+                                    print(day)
                                 }) {
                                     VStack {
                                         Text("\(calendar.component(.day, from: day))")
-                                            .padding()
-                                            
+                                            .padding(.top)
+                                            .font(.body)
+                                        
                                         Spacer()
                                     
                                     }
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                                     .padding(8)
                                     .background(selectedDate == day ? Color.blue : Color.clear)
-                                    .foregroundColor(selectedDate == day ? .white : .primary)
+                                    .foregroundColor(selectedDate == day ? Color.white : .primary)
                                     .cornerRadius(8)
-                                    
                                 }
                             } else {
                                 Text("")
@@ -146,10 +147,7 @@ struct CalendarView: View {
                     }
                 }
             }
-
             // Si el Picker de año es visible, superponerlo en la parte superior
-            
-                
         }
         .ignoresSafeArea()
         .padding()

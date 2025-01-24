@@ -26,15 +26,15 @@ struct SelectedSchoolView: View {
     }
     
     @State var titles: [NavigationItem] = [
-        NavigationItem(title: "Class", symbolName: "graduationcap", destination: AnyView(ClassView())),
-        NavigationItem(title: "Users", symbolName: "person.2", destination: AnyView(UsersView())),
-        NavigationItem(title: "Schedule", symbolName: "calendar", destination: AnyView(ScheduleView())),
-        NavigationItem(title: "Release", symbolName: "arrow.up.circle", destination: AnyView(Text("Release"))),
-        NavigationItem(title: "Fouls", symbolName: "exclamationmark.circle", destination: AnyView(Text("Fouls"))),
-        NavigationItem(title: "Information", symbolName: "info.circle", destination: AnyView(InformationView())),
-        NavigationItem(title: "Incidents", symbolName: "exclamationmark.triangle", destination: AnyView(Text("Incidents"))),
-        NavigationItem(title: "Courses", symbolName: "person.3.sequence.fill", destination: AnyView(Text("Courses"))),
-        NavigationItem(title: "school grades", symbolName: "person.3.sequence.fill", destination: AnyView(Text("school grades")))
+        NavigationItem(title: "Class", symbolName: "graduationcap", destination: AnyView(ClassView())),     // Clases
+        NavigationItem(title: "Users", symbolName: "person.2", destination: AnyView(UsersView())),          // Usuarios
+        NavigationItem(title: "Schedule", symbolName: "calendar", destination: AnyView(ScheduleView())),        // Horario
+        NavigationItem(title: "Release", symbolName: "arrow.up.circle", destination: AnyView(Text("Release"))),     // comunicados
+        NavigationItem(title: "Fouls", symbolName: "exclamationmark.circle", destination: AnyView(Text("Fouls"))),      // Faltas
+        NavigationItem(title: "Information", symbolName: "info.circle", destination: AnyView(InformationView())),       // Informacion
+        NavigationItem(title: "Incidents", symbolName: "exclamationmark.triangle", destination: AnyView(Text("Incidents"))),        // Incidentes
+        NavigationItem(title: "Courses", symbolName: "person.3.sequence.fill", destination: AnyView(Text("Courses"))),      // Cursos
+        NavigationItem(title: "school grades", symbolName: "person.3.sequence.fill", destination: AnyView(Text("school grades")))   // Calificaciones
     ]
         
     var body: some View {

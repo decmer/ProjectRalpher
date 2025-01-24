@@ -9,7 +9,8 @@ import SwiftUI
 
 struct UsersView: View {
     @Environment(ViewModel.self) private var vm
-    
+    @EnvironmentObject var tabViewModel: TabViewModel
+
     var groupedUsers: [RoleSchool: [UserModel]] {
         guard let userToSchool = vm.userToSchool else { return [:] }
         return Dictionary(grouping: userToSchool.map { $0.0 }, by: { pair in
@@ -24,10 +25,13 @@ struct UsersView: View {
                     if let users = groupedUsers[role], !users.isEmpty {
                         Section(header: Text(role.rawValue.capitalized)) {
                             ForEach(users) { user in
-                                NavigationLink {
-                                    UserView(user: user)
-                                } label: {
-                                    userPreview(user: user)
+                                if user.id == vm.users?.id {
+                                    userPreview(user: user, role: role)
+                                        .onTapGesture {
+                                            tabViewModel.selectedTab = 2
+                                        }
+                                } else {
+                                    userview(user: user, role: role)
                                 }
                             }
                         }
@@ -38,7 +42,15 @@ struct UsersView: View {
         }
     }
     
-    func userPreview(user: UserModel) -> some View {
+    func userview(user: UserModel, role: RoleSchool) -> some View {
+        NavigationLink {
+            UserView(user: user, role: role)
+        } label: {
+            userPreview(user: user, role: role)
+        }
+    }
+    
+    func userPreview(user: UserModel, role: RoleSchool) -> some View {
         HStack {
             AsyncImage(url: URL(string: user.imgurl ?? "https://xvkymhtcipdbdanikzpq.supabase.co/storage/v1/object/public/img/userProfileBasic.png?t=2025-01-21T18%3A49%3A17.726Z")) { image in
                 image
@@ -63,4 +75,5 @@ struct UsersView: View {
 #Preview {
     UsersView()
         .environment(Preview.vm())
+        .environmentObject(Preview.tabViewModel)
 }

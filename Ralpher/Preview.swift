@@ -12,9 +12,11 @@ import SwiftUICore
 final class Preview {
     static let vm = {
         var vm = ViewModel()
+        let user: UserModel = .init(id: UUID(), name: "jose Antonio Merinno Decena")
         vm.schoolSelected = SchoolsModel(id: 197, name: "jose", color: Color.blue.toHex(), image: "")
         vm.userToSchool = [(UserModel, RoleSchool)]()
-        vm.userToSchool?.append((.init(id: UUID(), name: "jose Antonio Merinno Decena"), .manager))
+        vm.users = user
+        vm.userToSchool?.append((user, .manager))
         vm.userToSchool?.append((.init(id: UUID(), name: "jorge frnandez genicio"), .admin))
         vm.userToSchool?.append((.init(id: UUID(), name: "Pablo de los santos"), .student))
         vm.userToSchool?.append((.init(id: UUID(), name: "Pablo Merino"), .student))
@@ -28,6 +30,8 @@ final class Preview {
         vm.roleSchoolSelected = .student
         return vm
     }
+    
+    static let tabViewModel = TabViewModel()
 
 }
 

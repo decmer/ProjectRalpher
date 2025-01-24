@@ -188,11 +188,13 @@ extension ViewModel {
         let updatedValues: [String: AnyJSON] = [
             "role": .string(newRole)
         ]
-        
-        try await supabase.database
-            .from("class_users")
-            .update(updatedValues)
-            .eq("id_users", value: userId)
-            .execute()
+        if let idSchool = self.schoolSelected?.id {
+            try await supabase.database
+                .from("users_schools")
+                .update(updatedValues)
+                .eq("user_id", value: userId)
+                .eq("school_id", value: idSchool)
+                .execute()
+        }
     }
 }

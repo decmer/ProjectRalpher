@@ -114,20 +114,20 @@ extension ViewModel {
     }
     
     func subscribeToUsersSchools() async {
-        channelSchools = await supabase.realtimeV2.channel("schools")
+        channelSchools = await supabase.realtimeV2.channel("users_schools")
                 
         guard let channel = channelSchools else { return }
         
-        let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "schools")
+        let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "users_schools")
             
-        let updateStream = await channel.postgresChange(UpdateAction.self, schema: "public", table: "schools")
+        let updateStream = await channel.postgresChange(UpdateAction.self, schema: "public", table: "users_schools")
             
-        let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "schools")
+        let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "users_schools")
 
         Task {
             for await insertAction in insertStream {
-                if let usersToSchool = self.userToSchool {
-                    let newUserSchool = try await self.convertDicToUsersSchools(insertAction.record)
+                if self.userToSchool != nil {
+                    let newUserSchool = await self.convertDicToUsersSchools(insertAction.record)
                     if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
                         self.userToSchool?.append((newUserSchool.0, newUserSchool.1))
                     }
@@ -137,17 +137,33 @@ extension ViewModel {
     
         Task {
             for await updateAction in updateStream {
-                DispatchQueue.main.async {
-                    
+                if self.userToSchool != nil {
+                    let newUserSchool = await self.convertDicToUsersSchools(updateAction.record)
+                    if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
+                        self.userToSchool = self.userToSchool?.map({ (user, role) in
+                            if user.id == newUserSchool.0.id {
+                                return (newUserSchool.0, newUserSchool.1)
+                            } else {
+                                return (user, role)
+                            }
+                        })
+                    }
                 }
-                
+                if let user = self.users, let schoolSelected = self.schoolSelected, let newUserSchool = await self.convertDicToUsersSchools(updateAction.record), user.id == newUserSchool.0.id, user.id == newUserSchool.0.id, schoolSelected.id == newUserSchool.2 {
+                    self.roleSchoolSelected = newUserSchool.1
+                }
             }
         }
     
         Task {
             for await deleteAction in deleteStream {
-                DispatchQueue.main.async {
-                    
+                if self.userToSchool != nil {
+                    let newUserSchool = await self.convertDicToUsersSchools(deleteAction.oldRecord)
+                    if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
+                        self.userToSchool?.removeAll(where: { (user, _) in
+                            user.id == newUserSchool.0.id
+                        })
+                    }
                 }
             }
         }
@@ -242,15 +258,19 @@ extension ViewModel {
         return school
     }
     
-    func convertDicToUsersSchools(_ dic: [String: AnyJSON]) async throws -> (UserModel, RoleSchool, Int)? {
+    func convertDicToUsersSchools(_ dic: [String: AnyJSON]) async -> (UserModel, RoleSchool, Int)? {
         let userID = UUID(uuidString: dic["user_id"]?.stringValue ?? "")!
         let role = dic["role"]?.stringValue ?? ""
         let schoolID = dic["school_id"]?.intValue ?? 0
 
-        let user = try await fetchUser(id: userID)
-        let schoolRole = RoleSchool(rawValue: role)
-        if let user = user, let schoolRole = schoolRole {
-            return (user, schoolRole, schoolID)
+        do {
+            let user = try await fetchUser(id: userID)
+            let schoolRole = RoleSchool(rawValue: role)
+            if let user = user, let schoolRole = schoolRole {
+                return (user, schoolRole, schoolID)
+            }
+        } catch {
+            
         }
         return nil
     }

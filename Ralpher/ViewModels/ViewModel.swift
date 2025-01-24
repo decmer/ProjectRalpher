@@ -49,6 +49,9 @@ final class ViewModel: ObservableObject {
         Task {
             await subscribeToClass()
         }
+        Task {
+            await subscribeToUsersSchools()
+        }
     }
     
 }
