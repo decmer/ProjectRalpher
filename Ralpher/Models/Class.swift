@@ -14,4 +14,5 @@ struct ClassModel: Identifiable, Decodable, Encodable {
     var id_school: Int?
     var color: String?
     var timeperweek: Int?
+    var specified_for_course: Bool
 }

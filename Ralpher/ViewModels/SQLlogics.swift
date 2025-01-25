@@ -8,6 +8,7 @@
 import Foundation
 import Supabase
 import Realtime
+import SwiftUI
 
 extension ViewModel {
     
@@ -19,7 +20,10 @@ extension ViewModel {
     
     /// funcion para podder ver todas las escuelas, por reglas de filas en el servidor solo podra ver las pertenecientes a susu usario
     func fetchSchools() async throws {
-        schools = try await supabase.database.from("schools").select("*").execute().value
+        let schools: [SchoolsModel]? = try await supabase.database.from("schools").select("*").execute().value
+        withAnimation {
+            self.schools = schools
+        }
     }
     
     /// funcion para ver todos los usuarios pertenecientes a esta escuela
@@ -60,6 +64,59 @@ extension ViewModel {
             self.classM = classMAux.filter({ $0.id_school == schools.id })
         }
     }
+    
+    func fetchClass(_ id: Int) async throws -> ClassModel? {
+        if let schools = self.schoolSelected {
+            let classMAux: ClassModel? = try await supabase.database.from("class").select("*").eq("id", value: id).limit(1).execute().value
+            if let classM = classMAux {
+                return classM
+            }
+        }
+        return nil
+    }
+    
+    func fetchCourse() async throws -> [CourseModel]? {
+        if let school = self.schoolSelected {
+            let courseModel: [CourseModel] = try await supabase.database.from("course").select("*").eq("id_school", value: school.id!).execute().value
+            return courseModel
+        }
+        return nil
+    }
+    
+    func prepareCacheCourseUsersSchool(_ idCourse: Int) async throws -> ([UserModel], [ClassModel])? {
+        if let courseUsersSchool = try await fetchCourseUsersSchool(idCourse), let courseCLass = try await fetchCourseClass(idCourse) {
+            return (courseUsersSchool, courseCLass)
+        }
+        return nil
+    }
+    
+    func fetchCourseUsersSchool(_ idCourse: Int) async throws -> [UserModel]? {
+        if let school = self.schoolSelected {
+            let result: [[String: AnyJSON]] = try await supabase.database.from("course_users_school").select("id_user").eq("id_school", value: school.id!).eq("id_course", value: idCourse).execute().value
+            var courseUsersSchool = [UserModel]()
+            for item in result {
+                let id = item["id_user"]?.stringValue ?? ""
+                await courseUsersSchool.append(try fetchUser(id: UUID(uuidString: id)!)!)
+            }
+            return courseUsersSchool
+        }
+        return nil
+    }
+    
+    func fetchCourseClass(_ idCourse: Int) async throws -> [ClassModel]? {
+        if let school = self.schoolSelected {
+            let result: [[String: AnyJSON]] = try await supabase.database.from("course_class").select("id_class").eq("id_course", value: idCourse).execute().value
+            var courseClass = [ClassModel]()
+            for item in result {
+                let id = item["id_class"]?.intValue
+                await courseClass.append(try fetchClass(id!)!)
+            }
+            return courseClass
+        }
+        return nil
+    }
+    
+    //Sentencias Insert
     
     func addUserToSchool(_ codejoin: String) async throws{
         let parameters: [String: String] = ["codejoininput": codejoin]
@@ -108,6 +165,16 @@ extension ViewModel {
             .from("class")
             .insert(classM)
             .execute()
+    }
+    
+    func createCourse(_ name: String) async throws {
+        if let id = schoolSelected?.id {
+            let course = CourseModel(id_school: id, name: name)
+            try await supabase.database
+                .from("course")
+                .insert(course)
+                .execute()
+        }
     }
     
     func createUser(_ firstName: String, lastName: String) async throws {

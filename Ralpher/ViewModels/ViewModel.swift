@@ -21,20 +21,44 @@ final class ViewModel: ObservableObject {
 
     var users: UserModel?
     var schools: [SchoolsModel]?
-    var schoolSelected: SchoolsModel? {
+    var schoolSelected: SchoolsModel? = nil {
         willSet {
             classM = nil
+        }
+        didSet {
+            if schoolSelected != nil {
+                Task {
+                    do {
+                        course = try await fetchCourse()
+                    } catch {
+                        messageError = error.localizedDescription
+                    }
+                }
+            }
         }
     }
     var roleSchoolSelected: RoleSchool?
     var userToSchool: [(UserModel, RoleSchool)]?
     var classM: [ClassModel]?
     var classSelected: ClassModel?
+    var course: [CourseModel]?
+    var courseSelected: (CourseModel, [UserModel], [ClassModel])?
+    var userToCourse: [UserModel]?
+    var classToCourse: [ClassModel]?
+
+    
     var isAuthenticated: Bool?
+    
     var channelUser: RealtimeChannelV2?
     var channelSchools: RealtimeChannelV2?
+    var channelClass: RealtimeChannelV2?
+    var channelCourse: RealtimeChannelV2?
+    var channelUsersSchool: RealtimeChannelV2?
     
-    var cache: [(SchoolsModel, RoleSchool, [(UserModel, RoleSchool)])]
+    
+    var cacheSchools: [(SchoolsModel, RoleSchool, [(UserModel, RoleSchool)])]
+    // var cacheClass: [(SchoolsModel, RoleSchool, [(UserModel, RoleSchool)])]
+    var cacheCourse: [(CourseModel, [UserModel], [ClassModel])]
     
     var messageError: String?
     
@@ -44,9 +68,10 @@ final class ViewModel: ObservableObject {
         self.schools = []
         self.isAuthenticated = isAuthenticated
         self.channelUser = channelUser
-        self.cache = []
+        self.cacheSchools = []
+        self.cacheCourse = []
         Task {
-            await subscribeToUserUpdates()
+            await subscribeToUser()
         }
         Task {
             await subscribeToSchools()
@@ -56,6 +81,9 @@ final class ViewModel: ObservableObject {
         }
         Task {
             await subscribeToUsersSchools()
+        }
+        Task {
+            await subscribeToCourse()
         }
     }
     

@@ -8,13 +8,14 @@
 import Foundation
 import Realtime
 import Supabase
+import SwiftUI
 
 extension ViewModel {
     
-    func subscribeToUserUpdates() async {
-        channelSchools = await supabase.realtimeV2.channel("users")
+    func subscribeToUser() async {
+        channelUser = await supabase.realtimeV2.channel("users")
                 
-        guard let channel = channelSchools else { return }
+        guard let channel = channelUser else { return }
         
         //let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "users")
             
@@ -118,9 +119,9 @@ extension ViewModel {
     }
     
     func subscribeToUsersSchools() async {
-        channelSchools = await supabase.realtimeV2.channel("users_schools")
+        channelUsersSchool = await supabase.realtimeV2.channel("users_schools")
                 
-        guard let channel = channelSchools else { return }
+        guard let channel = channelUsersSchool else { return }
         
         let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "users_schools")
             
@@ -133,7 +134,9 @@ extension ViewModel {
                 let newUserSchool = await self.convertDicToUsersSchools(insertAction.record)
                 if self.userToSchool != nil {
                     if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
-                        self.userToSchool?.append((newUserSchool.0, newUserSchool.1))
+                        withAnimation {
+                            self.userToSchool?.append((newUserSchool.0, newUserSchool.1))
+                        }
                     }
                 }
                 if newUserSchool?.0.id == self.users?.id {
@@ -151,17 +154,22 @@ extension ViewModel {
                 if self.userToSchool != nil {
                     let newUserSchool = await self.convertDicToUsersSchools(updateAction.record)
                     if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
-                        self.userToSchool = self.userToSchool?.map({ (user, role) in
+                        let userToSchool = self.userToSchool?.map({ (user, role) in
                             if user.id == newUserSchool.0.id {
                                 return (newUserSchool.0, newUserSchool.1)
                             } else {
                                 return (user, role)
                             }
                         })
+                        withAnimation {
+                            self.userToSchool = userToSchool
+                        }
                     }
                 }
                 if let user = self.users, let schoolSelected = self.schoolSelected, let newUserSchool = await self.convertDicToUsersSchools(updateAction.record), user.id == newUserSchool.0.id, user.id == newUserSchool.0.id, schoolSelected.id == newUserSchool.2 {
-                    self.roleSchoolSelected = newUserSchool.1
+                    withAnimation {
+                        self.roleSchoolSelected = newUserSchool.1
+                    }
                 }
             }
         }
@@ -179,7 +187,10 @@ extension ViewModel {
                 do {
                     try await fetchSchools()
                     if self.userToSchool != nil, let schoolSelectedID = self.schoolSelected?.id {
-                        self.userToSchool = try await fetchUseersToSchools(schoolSelectedID)
+                        let userToSchool = try await fetchUseersToSchools(schoolSelectedID)
+                        withAnimation {
+                            self.userToSchool = userToSchool
+                        }
                     }
                 } catch {
                     messageError = error.localizedDescription
@@ -191,9 +202,9 @@ extension ViewModel {
     }
     
     func subscribeToClass() async {
-        channelSchools = await supabase.realtimeV2.channel("class")
+        channelClass = await supabase.realtimeV2.channel("class")
                 
-        guard let channel = channelSchools else { return }
+        guard let channel = channelClass else { return }
         
         let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "class")
             
@@ -207,7 +218,9 @@ extension ViewModel {
                         if let schoolSelected = self.schoolSelected {
                             let classM = self.convertDicToClass(insertAction.record)
                             if classM.id_school == schoolSelected.id {
-                                self.classM?.append(classM)
+                                withAnimation {
+                                    self.classM?.append(classM)
+                                }
                             }
                         }
                     }
@@ -222,7 +235,9 @@ extension ViewModel {
                             if updatedClass.id_school == schoolSelected.id {
                                 let oldClass = self.convertDicToClass(updateAction.oldRecord)
                                 if let index = self.classM?.firstIndex(where: { $0.id == oldClass.id }) {
-                                    self.classM?[index] = updatedClass
+                                    withAnimation {
+                                        self.classM?[index] = updatedClass
+                                    }
                                 }
                             }
                         }
@@ -237,8 +252,10 @@ extension ViewModel {
                             let classM = self.convertDicToClass(deleteAction.oldRecord)
                             if classM.id_school == schoolSelected.id {
                                 let idClass = classM.id
-                                self.classM?.removeAll(where: { ClassModel in
-                                    idClass == ClassModel.id
+                                self.classM?.removeAll(where: { classModel in
+                                    withAnimation {
+                                        idClass == classModel.id
+                                    }
                                 })
                             }
                         }
@@ -248,6 +265,67 @@ extension ViewModel {
                 }
             }
 
+            await channel.subscribe()
+        }
+    
+    func subscribeToCourse() async {
+        channelCourse = await supabase.realtimeV2.channel("course")
+                
+        guard let channel = channelCourse else { return }
+        
+        let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "course")
+            
+        let updateStream = await channel.postgresChange(UpdateAction.self, schema: "public", table: "course")
+            
+        let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "course")
+
+            Task {
+                for await insertAction in insertStream {
+                    DispatchQueue.main.async {
+                        if let schoolSelected = self.schoolSelected {
+                            let course = self.convertDicToCourse(insertAction.record)
+                            if course.id_school == schoolSelected.id {
+                                withAnimation {
+                                    self.course?.append(course)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
+            Task {
+                for await updateAction in updateStream {
+                    DispatchQueue.main.async {
+                        if let schoolSelected = self.schoolSelected {
+                            let updatedCourse = self.convertDicToCourse(updateAction.record)
+                            if updatedCourse.id_school == schoolSelected.id {
+                                let oldCourse = self.convertDicToCourse(updateAction.oldRecord)
+                                if let index = self.course?.firstIndex(where: { $0.id == oldCourse.id }) {
+                                    withAnimation {
+                                        self.course?[index] = updatedCourse
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
+            Task {
+                for await deleteAction in deleteStream {
+                    if let schoolSelected = self.schoolSelected {
+                        do {
+                            let courseAux = try await fetchCourse()
+                            withAnimation {
+                                self.course = courseAux
+                            }
+                        } catch {
+                            messageError = error.localizedDescription
+                        }
+                    }
+                }
+            }
             await channel.subscribe()
         }
 }
@@ -300,9 +378,20 @@ extension ViewModel {
         let name = dic["name"]?.stringValue ?? ""
         let description = dic["description"]?.stringValue
         let color = dic["color"]?.stringValue
+        let specified_for_course = dic["specified_for_course"]?.boolValue ?? false
 
-        let classM = ClassModel(id: id, name: name, description: description, id_school: id_school, color: color)
+        let classM = ClassModel(id: id, name: name, description: description, id_school: id_school, color: color, specified_for_course: specified_for_course)
         
         return classM
+    }
+    
+    func convertDicToCourse(_ dic: [String: AnyJSON]) -> CourseModel {
+        let id = dic["id"]?.intValue
+        let name = dic["name"]?.stringValue ?? ""
+        let id_school = dic["id_school"]?.intValue
+
+        let course = CourseModel(id: id, id_school: id_school, name: name)
+        
+        return course
     }
 }

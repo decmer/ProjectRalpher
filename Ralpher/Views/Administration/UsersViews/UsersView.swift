@@ -13,32 +13,64 @@ struct UsersView: View {
 
     var groupedUsers: [RoleSchool: [UserModel]] {
         guard let userToSchool = vm.userToSchool else { return [:] }
-        return Dictionary(grouping: userToSchool.map { $0.0 }, by: { pair in
+        guard let userToCourse = vm.userToCourse else {
+            return Dictionary(grouping: userToSchool.map { $0.0 }, by: { pair in
+                userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
+            })
+        }
+        return Dictionary(grouping: userToSchool.map { $0.0 }.filter({ item in
+            userToCourse.contains(where: { $0.id == item.id })
+        }), by: { pair in
             userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
         })
     }
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(RoleSchool.allCases, id: \.self) { role in
-                    if let users = groupedUsers[role], !users.isEmpty {
-                        Section(header: Text(role.rawValue.capitalized)) {
-                            ForEach(users) { user in
-                                if user.id == vm.users?.id {
-                                    userPreview(user: user, role: role)
-                                        .onTapGesture {
-                                            tabViewModel.selectedTab = 2
-                                        }
-                                } else {
-                                    userview(user: user, role: role)
+            if vm.userToCourse != nil {
+                List {
+                    ForEach(RoleSchool.allCases, id: \.self) { role in
+                        if let users = groupedUsers[role], !users.isEmpty {
+                            Section(header: Text(role.rawValue.capitalized)) {
+                                ForEach(users) { user in
+                                    if user.id == vm.users?.id {
+                                        userPreview(user: user, role: role)
+                                            .onTapGesture {
+                                                tabViewModel.selectedTab = 2
+                                            }
+                                    } else {
+                                        userview(user: user, role: role)
+                                    }
+                                }
+                                
+                            }
+                            
+                        }
+                    }
+                }
+                .background(Color.clear)
+                .listStyle(InsetListStyle())
+            } else {
+                List {
+                    ForEach(RoleSchool.allCases, id: \.self) { role in
+                        if let users = groupedUsers[role], !users.isEmpty {
+                            Section(header: Text(role.rawValue.capitalized)) {
+                                ForEach(users) { user in
+                                    if user.id == vm.users?.id {
+                                        userPreview(user: user, role: role)
+                                            .onTapGesture {
+                                                tabViewModel.selectedTab = 2
+                                            }
+                                    } else {
+                                        userview(user: user, role: role)
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                .navigationTitle("Users by Role")
             }
-            .navigationTitle("Users by Role")
         }
     }
     

@@ -12,19 +12,31 @@ struct SchoolView: View {
     
     @State var isPresentedCreateView: Bool = false
     @State var isPresentedJoinView: Bool = false
+    @State var searchableSTR = ""
+    
+    var schoolFilter: [SchoolsModel]? {
+        if vm.schools != nil {
+            let filteredSchools: [SchoolsModel] = vm.schools!.filter {
+                $0.name.lowercased().contains(searchableSTR.lowercased())
+            }
+            return filteredSchools
+        } else {
+            return nil
+        }
+    }
     
     var body: some View {
         NavigationStack {
-            if let schools = vm.schools, !schools.isEmpty {
+            if let schoolsAux = schoolFilter, let schools = vm.schools, !schools.isEmpty {
                     LazyAdapList(preferredWidth: 350) {
-                        ForEach(schools) { school in
+                        ForEach(searchableSTR.isEmpty ? schools : schoolsAux) { school in
                             NavigationLink {
                                 SelectedSchoolView(name: school.name)
                                     .onAppear {
-                                        if let index = vm.cache.firstIndex(where: { $0.0.id == school.id! }) {
+                                        if let index = vm.cacheSchools.firstIndex(where: { $0.0.id == school.id! }) {
                                             vm.schoolSelected = school
-                                            vm.roleSchoolSelected = vm.cache[index].1
-                                            vm.userToSchool = vm.cache[index].2
+                                            vm.roleSchoolSelected = vm.cacheSchools[index].1
+                                            vm.userToSchool = vm.cacheSchools[index].2
                                         }
                                     }
                             } label: {
@@ -34,8 +46,8 @@ struct SchoolView: View {
                             }
                             .onDisappear {
                                 Task {
-                                    if let index = vm.cache.firstIndex(where: { $0.0.id == school.id! }) {
-                                        vm.cache.remove(at: index)
+                                    if let index = vm.cacheSchools.firstIndex(where: { $0.0.id == school.id! }) {
+                                        vm.cacheSchools.remove(at: index)
                                     }
                                 }
                             }
@@ -44,14 +56,16 @@ struct SchoolView: View {
                                     do {
                                         let userToSchool = try await vm.fetchUseersToSchools(school.id!)
                                         let roleSchoolSelected: RoleSchool = try await vm.fetchRoleToSchools(school.id!) ?? .student
-                                        vm.cache.append((school, roleSchoolSelected, userToSchool))
+                                        vm.cacheSchools.append((school, roleSchoolSelected, userToSchool))
                                     } catch {
                                         vm.messageError = error.localizedDescription
                                     }
                                 }
                             }
                         }
+                        
                     }
+                    .searchable(text: $searchableSTR)
                     .onAppear {
                         vm.schoolSelected = nil
                         vm.userToSchool = nil

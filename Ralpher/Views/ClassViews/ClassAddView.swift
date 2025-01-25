@@ -14,24 +14,27 @@ struct ClassAddView: View {
     @State private var description: String = ""
     @State private var color: Color = .white
     @State private var timePerWeek: Int = 1 // Valor predeterminado para horas por semana
+    @State private var specifiedForCourse = false
 
     @Binding var isPresented: Bool
 
     var body: some View {
         NavigationStack {
-            GeometryReader { geometry in
-                Form {
-                    // Sección para el nombre de la clase
-                    Section(header: Text("Class Details")) {
-                        TextField("Name", text: $name)
-                        ColorPicker("Color", selection: $color)
-                    }
-                    
-                    Section(header: Text("Description")) {
-                        TextEditor(text: $description)
-                    }
-                    
-                    // Sección para horas por semana
+            Form {
+                // Sección para el nombre de la clase
+                Section(header: Text("Class Details")) {
+                    TextField("Name", text: $name)
+                    ColorPicker("Color", selection: $color)
+                }
+                
+                Section(header: Text("Description")) {
+                    TextEditor(text: $description)
+                        .frame(minHeight: 60)
+                }
+                Toggle(isOn: $specifiedForCourse) {
+                    Text("Class specified for course")
+                }
+                if specifiedForCourse {
                     Section(header: Text("Time Per Week")) {
                         Stepper(value: $timePerWeek, in: 1...40) {
                             Text("\(timePerWeek) hour(s) per week")
@@ -45,7 +48,7 @@ struct ClassAddView: View {
                     Button("Create") {
                         Task {
                             do {
-                                try await vm.createClass(.init(name: name, description: description, id_school: vm.schoolSelected?.id, color: color.toHex(), timeperweek: timePerWeek))
+                                try await vm.createClass(.init(name: name, description: description, id_school: vm.schoolSelected?.id, color: color.toHex(), timeperweek: timePerWeek, specified_for_course: specifiedForCourse))
                                 isPresented = false
                             } catch {
                                 vm.messageError = error.localizedDescription

@@ -35,7 +35,7 @@ struct SelectedSchoolView: View {
         NavigationItem(title: "Fouls", symbolName: "exclamationmark.circle", destination: AnyView(Text("Fouls"))),      // Faltas
         NavigationItem(title: "Information", symbolName: "info.circle", destination: AnyView(InformationView())),       // Informacion
         NavigationItem(title: "Incidents", symbolName: "exclamationmark.triangle", destination: AnyView(Text("Incidents"))),        // Incidentes
-        NavigationItem(title: "Courses", symbolName: "person.3.sequence.fill", destination: AnyView(Text("Courses"))),      // Cursos
+        NavigationItem(title: "Courses", symbolName: "person.3.sequence.fill", destination: AnyView(CoursesView())),      // Cursos
         NavigationItem(title: "school grades", symbolName: "person.3.sequence.fill", destination: AnyView(Text("school grades")))   // Calificaciones
     ]
         
@@ -52,8 +52,14 @@ struct SelectedSchoolView: View {
                                     switch role {
                                     case .manager, .admin:
                                         if title.title.wrappedValue != "school grades" {
-                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                            if title.title.wrappedValue == "Courses" {
+                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                                    .onAppear(perform: { vm.userToCourse = nil })
+                                            } else {
+                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
+                                            }
                                         }
+                                        
                                     case .teacher:
                                         if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Information" && title.title.wrappedValue != "school grades" {
                                             item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
