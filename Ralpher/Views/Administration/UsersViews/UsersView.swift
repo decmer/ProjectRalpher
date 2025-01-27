@@ -26,7 +26,7 @@ struct UsersView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if vm.userToCourse != nil {
                 List {
                     ForEach(RoleSchool.allCases, id: \.self) { role in
@@ -72,6 +72,7 @@ struct UsersView: View {
                 .navigationTitle("Users by Role")
             }
         }
+        .navigationViewStyle(DoubleColumnNavigationViewStyle())
     }
     
     func userview(user: UserModel, role: RoleSchool) -> some View {

@@ -313,8 +313,8 @@ extension ViewModel {
             }
         
             Task {
-                for await deleteAction in deleteStream {
-                    if let schoolSelected = self.schoolSelected {
+                for await _ in deleteStream {
+                    if self.schoolSelected != nil {
                         do {
                             let courseAux = try await fetchCourse()
                             withAnimation {

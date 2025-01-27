@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LazyAdapList<Content> : View where Content : View {
-    let items = Array(1...5)
     var preferredWidth: CGFloat
     var data: () -> Content
     
@@ -47,7 +46,7 @@ struct LazyAdapList<Content> : View where Content : View {
 }
 
 #Preview {
-    LazyAdapList(preferredWidth: 100) {
+    LazyAdapList(preferredWidth: 350) {
         ForEach(Range(1...5), id: \.self) { i in
             Text("Item\(i)")
                 .frame(width: 100, height: 100)

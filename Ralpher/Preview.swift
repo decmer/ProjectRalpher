@@ -29,6 +29,15 @@ final class Preview {
         vm.userToSchool?.append((.init(id: UUID(), name: "jose rueda sanchez"), .teacher))
         vm.userToSchool?.append((.init(id: UUID(), name: "Juancarlos salazar holmo"), .teacher))
         vm.roleSchoolSelected = .admin
+        vm.course = [CourseModel]()
+        vm.course?.append(.init(id: 1, name: "Jose"))
+        vm.course?.append(.init(id: 2, name: "Jorge"))
+        vm.course?.append(.init(id: 3, name: "maria"))
+        vm.course?.append(.init(id: 4, name: "David"))
+        vm.course?.append(.init(id: 5, name: "Pablo"))
+        vm.course?.append(.init(id: 6, name: "Juan"))
+        vm.course?.append(.init(id: 7, name: "Cristian"))
+        
         return vm
     }
     

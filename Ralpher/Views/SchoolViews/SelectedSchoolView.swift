@@ -40,71 +40,69 @@ struct SelectedSchoolView: View {
     ]
         
     var body: some View {
-        GeometryReader { geometry in
-            NavigationStack {
-                HStack {
-                    Spacer()
-                    VStack(spacing: 30) {
-                        Spacer()
-                        LazyAdapList(preferredWidth: 150) {
-                            ForEach($titles, id: \.self) { title in
-                                if let role = vm.roleSchoolSelected {
-                                    switch role {
-                                    case .manager, .admin:
-                                        if title.title.wrappedValue != "school grades" {
-                                            if title.title.wrappedValue == "Courses" {
-                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                                    .onAppear(perform: { vm.userToCourse = nil })
-                                            } else {
-                                                item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                            }
+        NavigationStack {
+            GeometryReader { geometry in
+                VStack {
+                    LazyVGrid(columns: [GridItem(), GridItem()]) {
+                        ForEach($titles, id: \.self) { title in
+                            if let role = vm.roleSchoolSelected {
+                                switch role {
+                                case .manager, .admin:
+                                    if title.title.wrappedValue != "school grades" {
+                                        if title.title.wrappedValue == "Courses" {
+                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width, height: geometry.size.height)
+                                                .onAppear(perform: { vm.userToCourse = nil })
+                                        } else {
+                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width, height: geometry.size.height)
                                         }
-                                        
-                                    case .teacher:
-                                        if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Information" && title.title.wrappedValue != "school grades" {
-                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                        }
-                                    case .student:
-                                        if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Users" && title.title.wrappedValue != "Information" {
-                                            item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width)
-                                        }
+                                    }
+                                    
+                                case .teacher:
+                                    if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Information" && title.title.wrappedValue != "school grades" {
+                                        item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width, height: geometry.size.height)
+                                    }
+                                case .student:
+                                    if title.title.wrappedValue != "Courses" && title.title.wrappedValue != "Users" && title.title.wrappedValue != "Information" {
+                                        item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width, height: geometry.size.height)
                                     }
                                 }
                             }
                         }
+                    }
+                    .padding(.top)
+                    Spacer()
+                }
+                .onAppear {
+                    Task { do { try await vm.fetchClass() } catch { vm.messageError = error.localizedDescription } }
+                }
+                .overlay {
+                    VStack {
                         Spacer()
-                    }
-                    Spacer()
-                        .navigationTitle(vm.schoolSelected?.name ?? name)
-                }
-            }
-            .onAppear {
-                Task { do { try await vm.fetchClass() } catch { vm.messageError = error.localizedDescription } }
-            }
-            .overlay {
-                VStack {
-                    Spacer()
-                    if let role = vm.roleSchoolSelected?.rawValue {
-                        Text("role: \(role)")
-                            .font(.caption2)
+                        if let role = vm.roleSchoolSelected?.rawValue {
+                            Text("role: \(role)")
+                                .font(.caption2)
+                                .padding()
+                        }
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle(name)
         }
-
     }
     
-    func item(_ name: String, nameSimbol: String, view: some View, width: CGFloat)-> some View {
+    func item(_ name: String, nameSimbol: String, view: some View, width: CGFloat, height: CGFloat)-> some View {
         NavigationLink {
             view
         } label: {
-            itemview(name, nameSimbol: nameSimbol, width: width)
+            itemview(name, nameSimbol: nameSimbol, width: width, height: height)
         }
+        .padding()
     }
     
-    func itemview(_ name: String, nameSimbol: String, width: CGFloat) -> some View {
+    func itemview(_ name: String, nameSimbol: String, width: CGFloat, height: CGFloat) -> some View {
         RoundedRectangle(cornerRadius: 7)
-            .frame(width: 150, height: 100)
+            .frame(width: CGFloat(Int(width*0.38)), height: CGFloat(Int(height > 1100 ? height*0.17 : height*0.14)))
             .foregroundStyle(LinearGradient.harmoniousGradient(baseColor: Color(hex: (vm.schoolSelected?.color ?? Color.blue.toHex())!)))
             .overlay {
                 VStack {
@@ -116,7 +114,8 @@ struct SelectedSchoolView: View {
                             .font(.headline)
                             .foregroundStyle(Color(hex: (vm.schoolSelected?.color ?? Color.blue.toHex())!).contrastingColor())
                     }
-                    Spacer()                }
+                    Spacer()
+                }
             }
         
     }
