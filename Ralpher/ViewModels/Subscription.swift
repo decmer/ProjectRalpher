@@ -93,24 +93,33 @@ extension ViewModel {
     
         Task {
             for await updateAction in updateStream {
+                let updatedSchool = self.convertDicToSchools(updateAction.record)
+                let oldSchool = self.convertDicToSchools(updateAction.oldRecord)
                 DispatchQueue.main.async {
-                    let updatedSchool = self.convertDicToSchools(updateAction.record)
-                    let oldSchool = self.convertDicToSchools(updateAction.oldRecord)
                     if let index = self.schools?.firstIndex(where: { $0.id == oldSchool.id }) {
                         self.schools?[index] = updatedSchool
                     }
                 }
-                
+                if let x = self.cacheSchools.first(where: { SchoolRoleUsers in
+                    SchoolRoleUsers.school.id == oldSchool.id
+                }) {
+                    self.cacheSchools.remove(x)
+                }
             }
         }
     
         Task {
             for await deleteAction in deleteStream {
+                let idSchool = self.convertDicToSchools(deleteAction.oldRecord).id
                 DispatchQueue.main.async {
-                    let idSchool = self.convertDicToSchools(deleteAction.oldRecord).id
                     self.schools?.removeAll(where: { SchoolsModel in
                         idSchool == SchoolsModel.id
                     })
+                }
+                if let x = self.cacheSchools.first(where: { SchoolRoleUsers in
+                    SchoolRoleUsers.school.id == idSchool
+                }) {
+                    self.cacheSchools.remove(x)
                 }
             }
         }
@@ -151,31 +160,37 @@ extension ViewModel {
     
         Task {
             for await updateAction in updateStream {
-                if self.userToSchool != nil {
-                    let newUserSchool = await self.convertDicToUsersSchools(updateAction.record)
-                    if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
-                        let userToSchool = self.userToSchool?.map({ (user, role) in
-                            if user.id == newUserSchool.0.id {
-                                return (newUserSchool.0, newUserSchool.1)
-                            } else {
-                                return (user, role)
+                if let newUserSchool = await self.convertDicToUsersSchools(updateAction.record) {
+                    if self.userToSchool != nil {
+                        if newUserSchool.2 == self.schoolSelected?.id {
+                            let userToSchool = self.userToSchool?.map({ (user, role) in
+                                if user.id == newUserSchool.0.id {
+                                    return (newUserSchool.0, newUserSchool.1)
+                                } else {
+                                    return (user, role)
+                                }
+                            })
+                            withAnimation {
+                                self.userToSchool = userToSchool
                             }
-                        })
-                        withAnimation {
-                            self.userToSchool = userToSchool
                         }
                     }
-                }
-                if let user = self.users, let schoolSelected = self.schoolSelected, let newUserSchool = await self.convertDicToUsersSchools(updateAction.record), user.id == newUserSchool.0.id, user.id == newUserSchool.0.id, schoolSelected.id == newUserSchool.2 {
-                    withAnimation {
-                        self.roleSchoolSelected = newUserSchool.1
+                    if let user = self.users, let schoolSelected = self.schoolSelected, user.id == newUserSchool.0.id, user.id == newUserSchool.0.id, schoolSelected.id == newUserSchool.2 {
+                        withAnimation {
+                            self.roleSchoolSelected = newUserSchool.1
+                        }
+                    }
+                    if let x = self.cacheSchools.first(where: { SchoolRoleUsers in
+                        SchoolRoleUsers.school.id == newUserSchool.2
+                    }) {
+                        self.cacheSchools.remove(x)
                     }
                 }
             }
         }
     
         Task {
-            for await _ in deleteStream {
+            for await dic in deleteStream {
 //                if self.userToSchool != nil {
 //                    let newUserSchool = await self.convertDicToUsersSchools(deleteAction.oldRecord)
 //                    if let newUserSchool = newUserSchool, newUserSchool.2 == self.schoolSelected?.id {
@@ -194,6 +209,11 @@ extension ViewModel {
                     }
                 } catch {
                     messageError = error.localizedDescription
+                }
+                if let id = dic.oldRecord["school_id"]?.intValue, let x = self.cacheSchools.first(where: { SchoolRoleUsers in
+                    SchoolRoleUsers.school.id == id
+                }) {
+                    self.cacheSchools.remove(x)
                 }
             }
         }
@@ -322,6 +342,66 @@ extension ViewModel {
                             }
                         } catch {
                             messageError = error.localizedDescription
+                        }
+                    }
+                }
+            }
+            await channel.subscribe()
+        }
+    
+    
+    func subscribeToUserCourse() async {
+        channelUserCourse = await supabase.realtimeV2.channel("course_users_school")
+                
+        guard let channel = channelUserCourse else { return }
+        
+        let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "course_users_school")
+                        
+        let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "course_users_school")
+
+            Task {
+                for await insertAction in insertStream {
+                    let dic = insertAction.record
+                    let id_course = dic["id_course"]?.intValue
+                    let id_school = dic["id_school"]?.intValue
+//                        let id_user = UUID(uuidString: dic["user_id"]?.stringValue ?? "")!
+                    
+                    if let idSchoolSelected = self.schoolSelected?.id, let id_school = id_school, let id_course = id_course, idSchoolSelected == id_school {
+                        Task {
+                            do {
+                                let userToScullAux = try await self.fetchCourseUsersSchool(id_course)
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        self.userToCourse = userToScullAux
+                                    }
+                                }
+                            } catch {
+                                self.messageError = error.localizedDescription
+                            }
+                        }
+                    }
+                }
+            }
+        
+            Task {
+                for await deleteAction in deleteStream {
+                    let dic = deleteAction.oldRecord
+                    let id_course = dic["id_course"]?.intValue
+                    let id_school = dic["id_school"]?.intValue
+//                        let id_user = UUID(uuidString: dic["user_id"]?.stringValue ?? "")!
+                    
+                    if let idSchoolSelected = self.schoolSelected?.id, let id_school = id_school, let id_course = id_course, idSchoolSelected == id_school {
+                        Task {
+                            do {
+                                let userToScullAux = try await self.fetchCourseUsersSchool(id_course)
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        self.userToCourse = userToScullAux
+                                    }
+                                }
+                            } catch {
+                                self.messageError = error.localizedDescription
+                            }
                         }
                     }
                 }

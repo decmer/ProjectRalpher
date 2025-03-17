@@ -9,6 +9,7 @@ import Foundation
 import Supabase
 import Realtime
 import SwiftUI
+import _PhotosUI_SwiftUI
 
 extension ViewModel {
     
@@ -40,6 +41,7 @@ extension ViewModel {
     
     /// funcion para saber el rol del usuario en la escuela
     func fetchRoleToSchools(_ idSchool: Int) async throws -> RoleSchool? {
+        if users == nil { return nil }
         let result: [[String: AnyJSON]] = try await supabase.database.from("users_schools").select("role").eq("school_id", value: idSchool).eq("user_id", value: users!.id).execute().value
         if let item = result.first {
             let role = item["role"]?.stringValue ?? ""
@@ -144,6 +146,29 @@ extension ViewModel {
             .execute()
     }
     
+    func usersAddCourse(idUser: Set<UUID>) async throws {
+        if let idCourse = self.courseSelected?.0.id {
+            idUser.forEach { UUID in
+                Task {
+                    do {
+                        try await userAddCourse(idCourse, idUser: UUID)
+                    } catch {
+                        self.messageError = error.localizedDescription
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func userAddCourse(_ idCourse: Int, idUser: UUID) async throws {
+        let parameters: [String: String] = ["id_course": String(idCourse), "id_school": String((self.schoolSelected?.id)!), "id_user": idUser.uuidString]
+        try await supabase.database
+            .from("course_users_school")
+            .insert(parameters)
+            .execute()
+    }
+
     // sentencias Remove
     func deleteSchool(_ school: SchoolsModel) async throws {
         try await supabase.database
@@ -175,23 +200,17 @@ extension ViewModel {
         }
     }
     
-
-    // otras
-    
-    func isExistUsersPublicTable() async throws {
-
-        let userId = try await supabase.auth.user().id
-        // Realizar la consulta para verificar si el usuario está en la tabla public.users
-        let data: UserModel? = try await supabase.database.from("users").select().eq("id", value: userId).single().execute().value
-
-        if let user = data {
-            print("El usuario está en la tabla: \(user)")
-            // Aquí puedes manejar la lógica si el usuario existe
-        } else {
-            print("El usuario no se encontró en la tabla.")
-            // Aquí puedes manejar la lógica si el usuario no existe
-        }
+    func userDelCourse(_ idCourse: Int, idUser: UUID) async throws {
+        try await supabase.database
+            .from("course_users_school")
+            .delete()
+            .eq("id_course", value: idCourse)
+            .eq("id_school", value: (self.schoolSelected?.id)!)
+            .eq("id_user", value: idUser)
+            .execute()
     }
+
+    // Update
     
     func updateSchool() async throws {
         if let school = self.schoolSelected {
@@ -231,7 +250,9 @@ extension ViewModel {
         }
     }
     
-    func uploadImage(_ data: Data, name: String) async throws {
+    
+    
+    func uploadImage(_ data: Data) async throws {
         let fileName = UUID().uuidString
         
         try await supabase.storage.from("img")
@@ -248,20 +269,6 @@ extension ViewModel {
         try await updateUser()
     }
     
-    func getURLBucket(_ fileName: String) async throws -> URL {
-        let bucket = supabase.storage.from("img")
-        return try bucket.getPublicURL(path: fileName)
-    }
-    
-    func removeItemBucket(_ fileName: String, bucketName: String) async throws {
-        if fileName != "userProfileBasic.png" {
-            let bucket = supabase.storage.from(bucketName)
-            try await bucket.remove(paths: [fileName])
-        }
-    }
-    
-    
-
     func updateUserRole(userId: UUID, newRole: String) async throws {
         let updatedValues: [String: AnyJSON] = [
             "role": .string(newRole)
@@ -273,6 +280,36 @@ extension ViewModel {
                 .eq("user_id", value: userId)
                 .eq("school_id", value: idSchool)
                 .execute()
+        }
+    }
+    
+    // otras
+    
+    
+    func isExistUsersPublicTable() async throws -> Bool {
+
+        let userId = try await supabase.auth.user().id
+        // Realizar la consulta para verificar si el usuario está en la tabla public.users
+        let data: [UserModel]? = try await supabase.database.from("users").select().eq("id", value: userId).limit(1).execute().value
+
+        if let user = data?.first {
+            print("El usuario está en la tabla: \(user)")
+            return true
+        } else {
+            print("El usuario no se encontró en la tabla.")
+            return false
+        }
+    }
+    
+    func getURLBucket(_ fileName: String) async throws -> URL {
+        let bucket = supabase.storage.from("img")
+        return try bucket.getPublicURL(path: fileName)
+    }
+    
+    func removeItemBucket(_ fileName: String, bucketName: String) async throws {
+        if fileName != "userProfileBasic.png" {
+            let bucket = supabase.storage.from(bucketName)
+            try await bucket.remove(paths: [fileName])
         }
     }
 }

@@ -13,7 +13,6 @@ struct ProfileEditView: View {
     
     @State private var name: String = ""
     @State private var surname: String = ""
-    @State private var imageUrl: String = ""
     @State var selectedItem: PhotosPickerItem?
     
     var body: some View {
@@ -87,18 +86,7 @@ struct ProfileEditView: View {
     }
     
     private func saveProfile() {
-        Task {
-            if let selectedItem, let data = try? await selectedItem.loadTransferable(type: Data.self) {
-                do {
-                    try await vm.uploadImage(data, name: "")
-                } catch {
-                    vm.messageError = error.localizedDescription
-                }
-            }
-        }
-        vm.users?.name = name
-        vm.users?.surname = surname
-        vm.isLoading = true
+        vm.saveProfile(selectedItem: selectedItem, name: name, surname: surname)
     }
 }
 

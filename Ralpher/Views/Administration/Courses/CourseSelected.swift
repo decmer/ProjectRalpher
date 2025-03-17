@@ -11,6 +11,7 @@ struct CourseSelected: View {
     @Environment(ViewModel.self) private var vm
     
     @State var option: OptionView = .usersO
+    @State var showAddUser = false
     
     let name: String
     
@@ -23,6 +24,7 @@ struct CourseSelected: View {
                             Text(role.rawValue).tag(role)
                         }
                     }
+                    
                     .pickerStyle(SegmentedPickerStyle())
                     .navigationTitle(course.0.name)
                     
@@ -36,6 +38,30 @@ struct CourseSelected: View {
                     
                     Spacer()
                 }
+                .sheet(isPresented: $showAddUser) {
+                    AddUsersCourseView{ users in
+                        Task {
+                            do {
+                                try await vm.usersAddCourse(idUser: users)
+                                showAddUser = false
+                            } catch {
+                                vm.messageError = error.localizedDescription
+                            }
+                        }
+                    }
+                }
+                .toolbar(content: {
+                    Button {
+                        switch option {
+                        case .usersO: showAddUser = true
+                            
+                        case .classO: break
+                            
+                        }
+                    } label: {
+                        Text("+")
+                    }
+                })
             } else {
                 ProgressView()
                     .navigationTitle(name)

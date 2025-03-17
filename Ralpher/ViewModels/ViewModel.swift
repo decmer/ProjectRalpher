@@ -18,7 +18,9 @@ let supabase = SupabaseClient(
 @Observable
 @MainActor
 final class ViewModel: ObservableObject {
-
+    let name: String = ""
+    static let name: String = ""
+    
     var users: UserModel?
     var schools: [SchoolsModel]?
     var schoolSelected: SchoolsModel? = nil {
@@ -48,26 +50,28 @@ final class ViewModel: ObservableObject {
 
     
     var isAuthenticated: Bool?
+    var isLoading: Bool?
     
     var channelUser: RealtimeChannelV2?
     var channelSchools: RealtimeChannelV2?
     var channelClass: RealtimeChannelV2?
     var channelCourse: RealtimeChannelV2?
     var channelUsersSchool: RealtimeChannelV2?
+    var channelUserCourse: RealtimeChannelV2?
     
     
-    var cacheSchools: [(SchoolsModel, RoleSchool, [(UserModel, RoleSchool)])]
+    var cacheSchools: Set<SchoolRoleUsers>
     // var cacheClass: [(SchoolsModel, RoleSchool, [(UserModel, RoleSchool)])]
     var cacheCourse: [(CourseModel, [UserModel], [ClassModel])]
     
     var messageError: String?
     
     
-    init(users: UserModel? = nil, schools: [SchoolsModel]? = nil, isAuthenticated: Bool? = nil, channelUser: RealtimeChannelV2? = nil) {
-        self.users = users
+    init() {
+        self.users = nil
         self.schools = []
-        self.isAuthenticated = isAuthenticated
-        self.channelUser = channelUser
+        self.isAuthenticated = nil
+        self.channelUser = nil
         self.cacheSchools = []
         self.cacheCourse = []
         Task {
@@ -85,7 +89,9 @@ final class ViewModel: ObservableObject {
         Task {
             await subscribeToCourse()
         }
+        Task {
+            await subscribeToUserCourse()
+        }
     }
-    
 }
 

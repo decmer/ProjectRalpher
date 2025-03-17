@@ -40,6 +40,7 @@ struct UsersView: View {
                                             }
                                     } else {
                                         userview(user: user, role: role)
+                                            
                                     }
                                 }
                                 
@@ -80,6 +81,20 @@ struct UsersView: View {
             UserView(user: user, role: role)
         } label: {
             userPreview(user: user, role: role)
+        }
+        .swipeActions(edge: .trailing) {
+            Button(action: {
+                Task {
+                    do {
+                        try await vm.userDelCourse((vm.courseSelected?.0.id)!, idUser: user.id)
+                    } catch {
+                        vm.messageError = error.localizedDescription
+                    }
+                }
+            }) {
+                Label("Eliminar", systemImage: "trash.fill") // Icono de papelera
+            }
+            .tint(.red)
         }
     }
     

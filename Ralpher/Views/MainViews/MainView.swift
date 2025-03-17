@@ -20,35 +20,43 @@ struct MainView: View {
     var body: some View {
         if let isAuthenticated = vm.isAuthenticated {
             if isAuthenticated {
-                TabView(selection: $tabViewModel.selectedTab) {
-                    SchoolView()
-                        .environmentObject(tabViewModel)
-                        .tabItem {
-                            Image(systemName: "house")
-                            Text("Home")
-                        }
-                        .tag(0)
+                if vm.users != nil {
+                    TabView(selection: $tabViewModel.selectedTab) {
+                        SchoolView()
+                            .environmentObject(tabViewModel)
+                            .tabItem {
+                                Image(systemName: "house")
+                                Text("Home")
+                            }
+                            .tag(0)
 
-                    CalendarView()
-                        .tabItem {
-                            Image(systemName: "calendar")
-                            Text("Calendar")
-                        }
-                        .tag(1)
+                        CalendarView()
+                            .tabItem {
+                                Image(systemName: "calendar")
+                                Text("Calendar")
+                            }
+                            .tag(1)
 
-                    SettingsView()
-                        .tabItem {
-                            Image(systemName: "gearshape")
-                            Text("Settings")
-                        }
-                        .tag(2)
+                        SettingsView()
+                            .tabItem {
+                                Image(systemName: "gearshape")
+                                Text("Settings")
+                            }
+                            .tag(2)
+                    }
+                    .onDisappear(perform: {
+                        vm.users = nil
+                    })
+                    .modifier(FloatingMessageModifier())
+                } else {
+                    ProfileEditView()
+                        .environment(vm)
                 }
-                .modifier(FloatingMessageModifier())
             } else {
                 UserAuthenticationView()
             }
         } else {
-            ProgressView()
+            LoadScreenView()
                 .onAppear {
                     Task {
                         do {
@@ -78,6 +86,19 @@ struct MainView: View {
             }
         }
             
+    }
+    
+    struct LoadScreenView: View {
+        var body: some View {
+            ZStack {
+                Color.white.edgesIgnoringSafeArea(.all)
+                ProgressView("Cargando...")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .padding(50)
+                    .foregroundColor(.blue)
+            }
+            .modifier(FloatingMessageModifier())
+        }
     }
 }
 

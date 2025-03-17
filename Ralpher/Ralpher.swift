@@ -14,6 +14,7 @@ struct PruebaPosgreeApp: App {
     @State var vm = ViewModel()
     
     var body: some Scene {
+        
         WindowGroup {
             MainView()
                 .environment(vm)

@@ -33,10 +33,10 @@ struct SchoolView: View {
                             NavigationLink {
                                 SelectedSchoolView(name: school.name)
                                     .onAppear {
-                                        if let index = vm.cacheSchools.firstIndex(where: { $0.0.id == school.id! }) {
+                                        if let schoolRoolUser = vm.cacheSchools.first(where: { $0.school.id == school.id }) {
                                             vm.schoolSelected = school
-                                            vm.roleSchoolSelected = vm.cacheSchools[index].1
-                                            vm.userToSchool = vm.cacheSchools[index].2
+                                            vm.roleSchoolSelected = schoolRoolUser.role
+                                            vm.userToSchool = schoolRoolUser.users
                                         }
                                     }
                             } label: {
@@ -44,19 +44,17 @@ struct SchoolView: View {
                                     .frame(width: 350, height: 200)
                                     .padding(.vertical, 12)
                             }
-                            .onDisappear {
-                                Task {
-                                    if let index = vm.cacheSchools.firstIndex(where: { $0.0.id == school.id! }) {
-                                        vm.cacheSchools.remove(at: index)
-                                    }
-                                }
-                            }
                             .onAppear {
                                 Task {
                                     do {
-                                        let userToSchool = try await vm.fetchUseersToSchools(school.id!)
-                                        let roleSchoolSelected: RoleSchool = try await vm.fetchRoleToSchools(school.id!) ?? .student
-                                        vm.cacheSchools.append((school, roleSchoolSelected, userToSchool))
+                                        if !vm.cacheSchools.contains(where: { SchoolRoleUsers in
+                                            SchoolRoleUsers.school.id == school.id
+                                        }) {
+                                            if let roleSchoolSelected: RoleSchool = try await vm.fetchRoleToSchools(school.id!) {
+                                                let userToSchool = try await vm.fetchUseersToSchools(school.id!)
+                                                vm.cacheSchools.insert(SchoolRoleUsers(school: school, role: roleSchoolSelected, users: userToSchool))
+                                            }
+                                        }
                                     } catch {
                                         vm.messageError = error.localizedDescription
                                     }

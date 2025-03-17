@@ -27,7 +27,7 @@ struct SettingsView: View {
                     Task {
                         if let selectedItem, let data = try? await selectedItem.loadTransferable(type: Data.self) {
                             do {
-                                try await vm.uploadImage(data, name: "")
+                                try await vm.uploadImage(data)
                             } catch {
                                 vm.messageError = error.localizedDescription
                             }

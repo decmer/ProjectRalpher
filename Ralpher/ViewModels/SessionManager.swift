@@ -9,6 +9,7 @@ import SwiftUI
 import Supabase
 import AuthenticationServices
 import GoogleSignIn
+import _PhotosUI_SwiftUI
 
 extension ViewModel {
     
@@ -88,7 +89,12 @@ extension ViewModel {
     
     func logoutUser() async throws {
         try await supabase.auth.signOut()
-        isAuthenticated = false
+        self.users = nil
+        self.schools = []
+        self.isAuthenticated = nil
+        self.channelUser = nil
+        self.cacheSchools = []
+        self.cacheCourse = []
     }
     func isSessionValid() async throws -> Bool {
         guard let expiresAt = try await supabase.auth.session.expiresAt else {
@@ -100,11 +106,14 @@ extension ViewModel {
     func forceLogout() async throws {
         try await supabase.auth.signOut()
 
-        // Elimina datos locales de la sesión
         clearUserDefaults()
 
-        // Marcar como no autenticado
-        isAuthenticated = false
+        self.users = nil
+        self.schools = []
+        self.isAuthenticated = nil
+        self.channelUser = nil
+        self.cacheSchools = []
+        self.cacheCourse = []
 
         // Refresca la sesión para asegurarse de que se elimina todo
         try await refreshSession()
@@ -126,7 +135,7 @@ extension ViewModel {
             try await supabase.auth.resetPasswordForEmail(email)
             print("Correo de recuperación enviado.")
         } catch {
-            print("Error al enviar correo de recuperación:", error.localizedDescription)
+            messageError = error.localizedDescription
         }
     }
     
@@ -136,9 +145,52 @@ extension ViewModel {
     
     func restoreSession() async throws {
         let user = try await supabase.auth.session.user
-        print("Sesión restaurada. Usuario:", user.id)
         self.users = try await fetchUser(id: user.id)
         isAuthenticated = true
+    }
+    
+    func getIdUser() async throws -> UUID? {
+        var id: UUID?
+        do {
+            id = try await supabase.auth.session.user.id
+        } catch {
+            messageError = error.localizedDescription
+        }
+        return id
+    }
+    
+    func saveProfile(selectedItem: PhotosPickerItem?, name: String, surname: String) {
+        Task {
+            do {
+                if let id = try await getIdUser() {
+                    var user = UserModel(id: id, name: name, surname: surname)
+                    
+                    if let selectedItem, let data = try? await selectedItem.loadTransferable(type: Data.self) {
+                        let fileName = UUID().uuidString
+                        
+                        try await supabase.storage.from("img")
+                            .upload(
+                                path: fileName,
+                                file: data,
+                                options: FileOptions(contentType: "image/jpeg")
+                            )
+                        if let oldFileName = self.users?.imgname {
+                            try await removeItemBucket(oldFileName, bucketName: "img")
+                        }
+                        user.imgname = fileName
+                        user.imgurl = try await getURLBucket(fileName).absoluteString
+                    } else {
+                        messageError = "No se ha podido seleccionar una imagen"
+                    }
+                    try await supabase.database.from("users").insert(user).execute()
+                    self.users = user
+                } else {
+                    messageError = "No se ha podido obtener el ID del usuario"
+                }
+            } catch {
+                messageError = error.localizedDescription
+            }
+        }
     }
 }
 

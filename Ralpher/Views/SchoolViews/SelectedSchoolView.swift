@@ -66,6 +66,8 @@ struct SelectedSchoolView: View {
                                         item(title.title.wrappedValue, nameSimbol: title.symbolName.wrappedValue, view: title.destination.wrappedValue, width: geometry.size.width, height: geometry.size.height)
                                     }
                                 }
+                            } else {
+                                ProgressView()
                             }
                         }
                     }
@@ -97,7 +99,7 @@ struct SelectedSchoolView: View {
         } label: {
             itemview(name, nameSimbol: nameSimbol, width: width, height: height)
         }
-        .padding()
+        .padding(height < 500 ? 3 : 15)
     }
     
     func itemview(_ name: String, nameSimbol: String, width: CGFloat, height: CGFloat) -> some View {
