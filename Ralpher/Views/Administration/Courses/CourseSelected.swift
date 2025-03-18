@@ -43,6 +43,12 @@ struct CourseSelected: View {
                         Task {
                             do {
                                 try await vm.usersAddCourse(idUser: users)
+                                let userToScullAux = try await vm.fetchCourseUsersSchool(vm.courseSelected!.0.id!)
+                                DispatchQueue.main.async {
+                                    withAnimation {
+                                        vm.userToCourse = userToScullAux
+                                    }
+                                }
                                 showAddUser = false
                             } catch {
                                 vm.messageError = error.localizedDescription
@@ -59,7 +65,7 @@ struct CourseSelected: View {
                             
                         }
                     } label: {
-                        Text("+")
+                        Text("add")
                     }
                 })
             } else {

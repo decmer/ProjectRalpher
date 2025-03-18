@@ -8,60 +8,30 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "370951DD-7CD7-4B76-8966-24F8B788A1F9"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ralpher/ViewModels/SessionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
-            landmarkName = "saveProfile(selectedItem:name:surname:)"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "getIdUser()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "370951DD-7CD7-4B76-8966-24F8B788A1F9 - 9bd2a1d21120a40d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "163"
-                  endingLineNumber = "163">
-               </Location>
-               <Location
-                  uuid = "370951DD-7CD7-4B76-8966-24F8B788A1F9 - 4a4073a23925a3be"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "165"
-                  endingLineNumber = "165">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "B62B7551-3B2F-449D-8942-A6B2E17D4E27"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ralpher/ViewModels/SessionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "getIdUser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -70,23 +40,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "A5485708-FFD0-42E3-BFE6-F9FFB6C1756D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ralpher/ViewModels/SessionManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "saveProfile(selectedItem:name:surname:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ralpher/ViewModels/SessionManager.swift"
@@ -96,106 +50,22 @@
             endingLineNumber = "168"
             landmarkName = "saveProfile(selectedItem:name:surname:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - e66f6ad13c87c09c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - e66f6ad13c87c09c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - b242daecb64f76ed"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) await resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - 139babd452ee8c9a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - 139babd452ee8c9a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - a9f89eb9a3f9dda"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(16) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-               <Location
-                  uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C - a9f89eb9a3f9dda"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(16) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "168"
-                  endingLineNumber = "168">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "783DCF1C-9234-4E3B-BBED-C0A3413EBD3C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/ViewModels/SessionManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "saveProfile(selectedItem:name:surname:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -208,27 +78,13 @@
             filePath = "Ralpher/ViewModels/SessionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "saveProfile(selectedItem:name:surname:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - e19925c6d475ac93"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(10) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
-                  moduleName = "Ralpher.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "181"
-                  endingLineNumber = "181">
-               </Location>
-               <Location
-                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - 40c7e8ce89494b2b"
+                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - 40c7e8ce89494b69"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -238,11 +94,11 @@
                   urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "181"
-                  endingLineNumber = "181">
+                  startingLineNumber = "183"
+                  endingLineNumber = "183">
                </Location>
                <Location
-                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - fc7229c1afd03725"
+                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - fc7229c1afd03767"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -252,11 +108,11 @@
                   urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "181"
-                  endingLineNumber = "181">
+                  startingLineNumber = "183"
+                  endingLineNumber = "183">
                </Location>
                <Location
-                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - 5e7642f018ebb954"
+                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - 5e7642f018ebb916"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -266,11 +122,25 @@
                   urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "181"
-                  endingLineNumber = "181">
+                  startingLineNumber = "183"
+                  endingLineNumber = "183">
                </Location>
                <Location
-                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - c602bf02e71ae164"
+                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - e19925c6d475acd1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(10) suspend resume partial function for closure #1 () async -&gt; () in Ralpher.ViewModel.saveProfile(selectedItem: Swift.Optional&lt;_PhotosUI_SwiftUI.PhotosPickerItem&gt;, name: Swift.String, surname: Swift.String) -&gt; ()"
+                  moduleName = "Ralpher.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "183"
+                  endingLineNumber = "183">
+               </Location>
+               <Location
+                  uuid = "B70A59F3-8940-469A-BFE0-171EB0B7A071 - c602bf02e71ae126"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -280,8 +150,8 @@
                   urlString = "file:///Users/josemerinodecena/Desktop/programacion/swift/proyects/TFG/Ralpher/Ralpher/ViewModels/SessionManager.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "181"
-                  endingLineNumber = "181">
+                  startingLineNumber = "183"
+                  endingLineNumber = "183">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -296,8 +166,8 @@
             filePath = "Ralpher/ViewModels/SessionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
             landmarkName = "saveProfile(selectedItem:name:surname:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -312,9 +182,121 @@
             filePath = "Ralpher/ViewModels/SessionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
             landmarkName = "saveProfile(selectedItem:name:surname:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "93DC2762-6DAD-4862-859F-161856206C8E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/Views/Administration/Courses/CourseSelected.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3F5738E-6E39-4CAA-B82D-9FC0409304ED"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/Views/Administration/Courses/CoursesView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1EF92228-FFCE-4A7D-B22B-CB803139147A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/Views/Administration/UsersViews/ReleaseView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "classModels"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2A68882E-9DEC-409C-BEF9-F84FAAC69DBE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/Views/Administration/Courses/CoursesView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "previewCourse(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E758D99A-99F9-423C-B3F3-66587BECDD2E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/ViewModels/SQLlogics.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "fetchCourseClass(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "118072DD-43CE-496E-922F-AA4B326925C7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/ViewModels/SQLlogics.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "fetchCourseClass(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DACB0FC3-DD54-4A0C-A76B-5CB162356CFE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ralpher/ViewModels/SQLlogics.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "fetchClass(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

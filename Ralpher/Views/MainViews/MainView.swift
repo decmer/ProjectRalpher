@@ -87,19 +87,6 @@ struct MainView: View {
         }
             
     }
-    
-    struct LoadScreenView: View {
-        var body: some View {
-            ZStack {
-                Color.white.edgesIgnoringSafeArea(.all)
-                ProgressView("Cargando...")
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .padding(50)
-                    .foregroundColor(.blue)
-            }
-            .modifier(FloatingMessageModifier())
-        }
-    }
 }
 
 #Preview {

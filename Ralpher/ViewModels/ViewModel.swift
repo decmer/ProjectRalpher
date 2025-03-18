@@ -93,5 +93,17 @@ final class ViewModel: ObservableObject {
             await subscribeToUserCourse()
         }
     }
+    
+    
+    func restViewModelOutSchool() {
+        userToSchool = nil
+        classM = nil
+        classSelected = nil
+        course = nil
+        courseSelected = nil
+        userToCourse = nil
+        classToCourse = nil
+        cacheCourse = []
+    }
 }
 

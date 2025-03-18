@@ -68,8 +68,8 @@ extension ViewModel {
     }
     
     func fetchClass(_ id: Int) async throws -> ClassModel? {
-        let classMAux: ClassModel? = try await supabase.database.from("class").select("*").eq("id", value: id).limit(1).execute().value
-        return classMAux
+        let classMAux: [ClassModel] = try await supabase.database.from("class").select("*").eq("id", value: id).limit(1).execute().value
+        return classMAux.first
     }
     
     func fetchCourse() async throws -> [CourseModel]? {

@@ -19,9 +19,7 @@ struct AddUsersCourseView: View {
                 userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
             })
         }
-        let dic = Dictionary(grouping: userToSchool.filter({ (_, roleSchool) in
-            (roleSchool != .admin && roleSchool != .manager)
-        }).map { $0.0 }.filter({ item in
+        let dic = Dictionary(grouping: userToSchool.map { $0.0 }.filter({ item in
             return !userToCourse.contains(where: { $0.id == item.id })
         }), by: { pair in
             userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
@@ -46,16 +44,14 @@ struct AddUsersCourseView: View {
                         if let users = groupedUsers[role], !users.isEmpty {
                             Section(header: Text(role.rawValue.capitalized)) {
                                 ForEach(users) { user in
-                                    if user.id != vm.users?.id {
-                                        userview(user: user, role: role)
-                                            .onTapGesture {
-                                                if addUserModel.contains(user.id) {
-                                                    addUserModel.remove(user.id)
-                                                } else {
-                                                    addUserModel.insert(user.id)
-                                                }
+                                    userview(user: user, role: role)
+                                        .onTapGesture {
+                                            if addUserModel.contains(user.id) {
+                                                addUserModel.remove(user.id)
+                                            } else {
+                                                addUserModel.insert(user.id)
                                             }
-                                    }
+                                        }
                                 }
                             }
                         }

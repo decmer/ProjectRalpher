@@ -41,7 +41,9 @@ struct UserView: View {
                     .font(.title2)
                 
                 Picker("Role", selection: $role) {
-                    ForEach(RoleSchool.allCases, id: \.self) { role in
+                    ForEach(RoleSchool.allCases.filter({ RoleSchool in
+                        (vm.roleSchoolSelected == .admin && RoleSchool != .manager) || vm.roleSchoolSelected == .manager
+                    }), id: \.self) { role in
                         Text(role.rawValue).tag(role)
                     }
                 }

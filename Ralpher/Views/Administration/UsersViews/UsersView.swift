@@ -18,28 +18,59 @@ struct UsersView: View {
                 userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
             })
         }
-        return Dictionary(grouping: userToSchool.map { $0.0 }.filter({ item in
-            userToCourse.contains(where: { $0.id == item.id })
-        }), by: { pair in
-            userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
+        let dic: [RoleSchool: [UserModel]] = Dictionary(grouping: userToCourse, by: { pair in
+            let retu = userToSchool.first(where: { $0.0.id == pair.id })?.1 ?? .student
+            if retu == .admin || retu == .manager {
+                return .teacher
+            }
+            return retu
         })
+        return dic
     }
     
     var body: some View {
         NavigationStack {
             if vm.userToCourse != nil {
                 List {
-                    ForEach(RoleSchool.allCases, id: \.self) { role in
+                    ForEach([RoleSchool.student, RoleSchool.teacher], id: \.self) { role in
                         if let users = groupedUsers[role], !users.isEmpty {
                             Section(header: Text(role.rawValue.capitalized)) {
                                 ForEach(users) { user in
                                     if user.id == vm.users?.id {
                                         userPreview(user: user, role: role)
-                                            .onTapGesture {
-                                                tabViewModel.selectedTab = 2
+//                                            .onTapGesture {
+//                                                tabViewModel.selectedTab = 2
+//                                            }
+                                            .swipeActions(edge: .trailing) {
+                                                Button(action: {
+                                                    Task {
+                                                        do {
+                                                            try await vm.userDelCourse((vm.courseSelected?.0.id)!, idUser: user.id)
+                                                        } catch {
+                                                            vm.messageError = error.localizedDescription
+                                                        }
+                                                    }
+                                                }) {
+                                                    Label("Eliminar", systemImage: "trash.fill") // Icono de papelera
+                                                }
+                                                .tint(.red)
                                             }
                                     } else {
                                         userview(user: user, role: role)
+                                            .swipeActions(edge: .trailing) {
+                                                Button(action: {
+                                                    Task {
+                                                        do {
+                                                            try await vm.userDelCourse((vm.courseSelected?.0.id)!, idUser: user.id)
+                                                        } catch {
+                                                            vm.messageError = error.localizedDescription
+                                                        }
+                                                    }
+                                                }) {
+                                                    Label("Eliminar", systemImage: "trash.fill") // Icono de papelera
+                                                }
+                                                .tint(.red)
+                                            }
                                             
                                     }
                                 }
@@ -82,20 +113,7 @@ struct UsersView: View {
         } label: {
             userPreview(user: user, role: role)
         }
-        .swipeActions(edge: .trailing) {
-            Button(action: {
-                Task {
-                    do {
-                        try await vm.userDelCourse((vm.courseSelected?.0.id)!, idUser: user.id)
-                    } catch {
-                        vm.messageError = error.localizedDescription
-                    }
-                }
-            }) {
-                Label("Eliminar", systemImage: "trash.fill") // Icono de papelera
-            }
-            .tint(.red)
-        }
+        
     }
     
     func userPreview(user: UserModel, role: RoleSchool) -> some View {

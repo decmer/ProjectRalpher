@@ -28,7 +28,7 @@ final class Preview {
         vm.userToSchool?.append((.init(id: UUID(), name: "Francisco jimenez clavijo"), .teacher))
         vm.userToSchool?.append((.init(id: UUID(), name: "jose rueda sanchez"), .teacher))
         vm.userToSchool?.append((.init(id: UUID(), name: "Juancarlos salazar holmo"), .teacher))
-        vm.roleSchoolSelected = .admin
+        vm.roleSchoolSelected = .manager
         vm.course = [CourseModel]()
         vm.course?.append(.init(id: 1, name: "Jose"))
         vm.course?.append(.init(id: 2, name: "Jorge"))
@@ -37,7 +37,23 @@ final class Preview {
         vm.course?.append(.init(id: 5, name: "Pablo"))
         vm.course?.append(.init(id: 6, name: "Juan"))
         vm.course?.append(.init(id: 7, name: "Cristian"))
-        
+        vm.classM = []
+        vm.classM?.append(.init(id: 1, name: "Refurezo mates", specified_for_course: false))
+        vm.classM?.append(.init(id: 1, name: "Extraordinarias", specified_for_course: false))
+        vm.classM?.append(.init(id: 1, name: "Futbol", specified_for_course: false))
+        vm.classM?.append(.init(id: 1, name: "1A", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "1B", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "1C", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "2A", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "2B", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "3A", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "3B", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "3C", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "4A", specified_for_course: true))
+        vm.classM?.append(.init(id: 1, name: "4B", specified_for_course: true))
+        vm.userToCourse = [.init(id: UUID(), name: "jorge frnandez genicio"), .init(id: UUID(), name: "Pablo de los santos"), .init(id: UUID(), name: "Pablo Merino"), .init(id: UUID(), name: "Adrian senrra"), .init(id: UUID(), name: "maria montewey ortiz diaz"), .init(id: UUID(), name: "david dominges mejia"), .init(id: UUID(), name: "Margaret de la torre"), .init(id: UUID(), name: "Francisco jimenez clavijo"), .init(id: UUID(), name: "jose rueda sanchez"), .init(id: UUID(), name: "Juancarlos salazar holmo")]
+        vm.userToSchool = [(.init(id: UUID(), name: "jorge frnandez genicio"), .admin), (.init(id: UUID(), name: "Pablo de los santos"), .manager), (.init(id: UUID(), name: "Pablo Merino"), .student), (.init(id: UUID(), name: "Adrian senrra"), .teacher), (.init(id: UUID(), name: "maria montewey ortiz diaz"), .admin), (.init(id: UUID(), name: "david dominges mejia"), .manager), (.init(id: UUID(), name: "Margaret de la torre"), .student), (.init(id: UUID(), name: "Francisco jimenez clavijo"), .teacher)]
+        vm.courseSelected = (CourseModel(id: 1, name: "Curso"), vm.userToCourse!, vm.classM!)
         return vm
     }
     

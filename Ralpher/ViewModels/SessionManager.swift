@@ -96,6 +96,8 @@ extension ViewModel {
         self.cacheSchools = []
         self.cacheCourse = []
     }
+
+    
     func isSessionValid() async throws -> Bool {
         guard let expiresAt = try await supabase.auth.session.expiresAt else {
             return false

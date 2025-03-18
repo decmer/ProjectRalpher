@@ -65,9 +65,10 @@ struct SchoolView: View {
                     }
                     .searchable(text: $searchableSTR)
                     .onAppear {
-                        vm.schoolSelected = nil
-                        vm.userToSchool = nil
-                        vm.roleSchoolSelected = nil
+//                        vm.schoolSelected = nil
+//                        vm.userToSchool = nil
+//                        vm.roleSchoolSelected = nil
+                        vm.restViewModelOutSchool()
                     }
                 .navigationTitle("Schools")
                 .toolbar {

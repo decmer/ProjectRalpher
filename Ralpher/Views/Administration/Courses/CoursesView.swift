@@ -12,7 +12,7 @@ struct CoursesView: View {
     
     @State var searchableSTR = ""
     @State var isPresented = false
-    
+    @State var featchCourseRetry = false
     
     var coursesFilter: [CourseModel]? {
         if vm.course != nil {
@@ -27,67 +27,92 @@ struct CoursesView: View {
     
     var body: some View {
         NavigationStack {
-            if let coursesFilter = coursesFilter, let courses = vm.course, !courses.isEmpty {
-                ScrollView {
-                    LazyVStack {
-                        ForEach(searchableSTR.isEmpty ? courses : coursesFilter) { course in
-                            NavigationLink {
-                                CourseSelected(name: course.name)
-                                    .onAppear {
+            if let coursesFilter = coursesFilter, let courses = vm.course {
+                if !courses.isEmpty {
+                    ScrollView {
+                        LazyVStack {
+                            ForEach(searchableSTR.isEmpty ? courses : coursesFilter) { course in
+                                NavigationLink {
+                                    previewCourse(course)
+                                    //                                    .onDisappear() {
+                                    //                                        vm.courseSelected = nil
+                                    //                                    }
+                                } label: {
+                                    CoursePreview(course: course)
+                                }
+                                
+                                .padding(.top)
+                                .onDisappear {
+                                    Task {
                                         if let index = vm.cacheCourse.firstIndex(where: { $0.0.id == course.id! }) {
-                                            vm.courseSelected = vm.cacheCourse[index]
-                                            vm.userToCourse = vm.cacheCourse[index].1
+                                            vm.cacheCourse.remove(at: index)
                                         }
                                     }
+                                }
+                                .onAppear {
+                                    Task {
+                                        do {
+                                            let prepareCache = try await vm.prepareCacheCourseUsersSchool(course.id!)
+                                            if let prepareCache = prepareCache {
+                                                vm.cacheCourse.append((course, prepareCache.0, prepareCache.1))
+                                            }
+                                        } catch {
+                                            vm.messageError = error.localizedDescription
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .toolbar {
+                            Button {
+                                isPresented = true
                             } label: {
-                                CoursePreview(course: course)
-                            }
-                            
-                            .padding(.top)
-                            .onDisappear {
-                                Task {
-                                    if let index = vm.cacheCourse.firstIndex(where: { $0.0.id == course.id! }) {
-                                        vm.cacheCourse.remove(at: index)
-                                    }
-                                }
-                            }
-                            .onAppear {
-                                Task {
-                                    do {
-                                        let prepareCache = try await vm.prepareCacheCourseUsersSchool(course.id!)
-                                        if let prepareCache = prepareCache {
-                                            vm.cacheCourse.append((course, prepareCache.0, prepareCache.1))
-                                        }
-                                    } catch {
-                                        vm.messageError = error.localizedDescription
-                                    }
-                                }
+                                Text("add")
                             }
                         }
-                    }
-                    .toolbar {
-                        Button {
-                            isPresented = true
-                        } label: {
-                            Text("add")
+                        .searchable(text: $searchableSTR)
+                        .navigationTitle("Courses")
+                        .onAppear {
+                            //                        vm.courseSelected = nil
                         }
                     }
-                    .searchable(text: $searchableSTR)
-                    .navigationTitle("Courses")
-                    .onAppear {
-                        vm.courseSelected = nil
-                    }
+                } else {
+                    Text("There is no course created")
                 }
             } else {
-                Text("You haven't created any courses yet")
-                    .navigationTitle("Courses")
-                    .toolbar {
-                        Button {
-                            isPresented = true
-                        } label: {
-                            Text("add")
+                
+                LoadScreenView()
+                    .onAppear {
+                        Task {
+                            while true {
+                                do {
+                                    vm.course = try await vm.fetchCourse()
+                                    break
+                                } catch {
+                                    vm.messageError = error.localizedDescription
+                                    sleep(5)
+                                }
+                            }
+                        }
+                        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1) {
+                            DispatchQueue.main.sync {
+                                withAnimation {
+                                    featchCourseRetry = true
+                                }
+                            }
                         }
                     }
+                if featchCourseRetry {
+                    Button("Retry", action: {
+                        Task {
+                            do {
+                                vm.course = try await vm.fetchCourse()
+                            } catch {
+                                vm.messageError = error.localizedDescription
+                            }
+                        }
+                    })
+                }
             }
         }
         .sheet(isPresented: $isPresented) {
@@ -96,8 +121,26 @@ struct CoursesView: View {
         }
     }
     
-    private func deleteItems(at offsets: IndexSet) {
-        
+    private func previewCourse(_ course: CourseModel) -> some View {
+        CourseSelected(name: course.name)
+            .onAppear {
+                if let index = vm.cacheCourse.firstIndex(where: { $0.0.id == course.id! }) {
+                    vm.courseSelected = vm.cacheCourse[index]
+                    vm.userToCourse = vm.cacheCourse[index].1
+                    vm.classToCourse = vm.cacheCourse[index].2
+                } else {
+                    Task {
+                        do {
+                            let caheAux: ([UserModel], [ClassModel])? = try await vm.prepareCacheCourseUsersSchool(course.id!)
+                            vm.courseSelected = (course, caheAux!.0, caheAux!.1)
+                            vm.userToCourse = caheAux?.0
+                            vm.classToCourse = caheAux?.1
+                        } catch {
+                            vm.messageError = error.localizedDescription
+                        }
+                    }
+                }
+            }
     }
 }
 
