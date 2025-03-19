@@ -408,6 +408,71 @@ extension ViewModel {
             }
             await channel.subscribe()
         }
+    
+    func subscribeToClassCourse() async {
+        channelClassCourse = await supabase.realtimeV2.channel("course_class")
+                
+        guard let channel = channelClassCourse else { return }
+        
+        let insertStream = await channel.postgresChange(InsertAction.self, schema: "public", table: "course_class")
+        
+        let deleteStream = await channel.postgresChange(DeleteAction.self, schema: "public", table: "course_class")
+
+            Task {
+                for await insertAction in insertStream {
+                    let dic = insertAction.record
+                    let id_course = dic["id_course"]?.intValue
+                    let id_class = dic["id_class"]?.intValue
+
+                    do {
+                        if let idSchoolSelected = self.schoolSelected?.id, let id_class = id_class, let id_course = id_course, let classNewValue = try await self.fetchClass(id_class), idSchoolSelected == classNewValue.id_school {
+                            
+                            if classToCourse != nil {
+                                classToCourse?.append(classNewValue)
+                            }
+                            
+                            if let index = cacheCourse.firstIndex(where:{ item in
+                                item.0.id == id_course
+                            }) {
+                                cacheCourse[index].2.append(classNewValue)
+                            }
+                        }
+                    } catch {
+                        messageError = error.localizedDescription
+                    }
+                }
+            }
+        
+            Task {
+                for await deleteAction in deleteStream {
+                    let dic = deleteAction.oldRecord
+                    let id_course = dic["id_course"]?.intValue
+                    let id_class = dic["id_class"]?.intValue
+
+                    do {
+                        if let idSchoolSelected = self.schoolSelected?.id, let id_class = id_class, let id_course = id_course, let classOldValue = try await self.fetchClass(id_class), idSchoolSelected == classOldValue.id_school {
+                            
+                            if classToCourse != nil {
+                                classToCourse?.removeAll(where: { classModel in
+                                    classModel.id == classOldValue.id
+                                })
+                            }
+                            
+                            if let index = cacheCourse.firstIndex(where:{ item in
+                                item.0.id == id_course
+                            }) {
+                                cacheCourse[index].2.removeAll(where: { classModel in
+                                    classModel.id == classOldValue.id
+                                })
+                            }
+                        }
+                    } catch {
+                        messageError = error.localizedDescription
+                    }
+                }
+            }
+            await channel.subscribe()
+        }
 }
 
 
@@ -459,9 +524,8 @@ extension ViewModel {
         let name = dic["name"]?.stringValue ?? ""
         let description = dic["description"]?.stringValue
         let color = dic["color"]?.stringValue
-        let specified_for_course = dic["specified_for_course"]?.boolValue ?? false
 
-        let classM = ClassModel(id: id, name: name, description: description, id_school: id_school, color: color, specified_for_course: specified_for_course)
+        let classM = ClassModel(id: id, name: name, description: description, id_school: id_school, color: color)
         
         return classM
     }

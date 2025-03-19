@@ -63,13 +63,7 @@ struct CoursesView: View {
                                 }
                             }
                         }
-                        .toolbar {
-                            Button {
-                                isPresented = true
-                            } label: {
-                                Text("add")
-                            }
-                        }
+                        
                         .searchable(text: $searchableSTR)
                         .navigationTitle("Courses")
                         .onAppear {
@@ -113,6 +107,13 @@ struct CoursesView: View {
                         }
                     })
                 }
+            }
+        }
+        .toolbar {
+            Button {
+                isPresented = true
+            } label: {
+                Text("add")
             }
         }
         .sheet(isPresented: $isPresented) {

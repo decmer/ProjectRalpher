@@ -32,38 +32,48 @@ struct CourseSelected: View {
                     case .usersO:
                         UsersView()
                     case .classO:
-                        ReleaseView()
+                        ClassCourseView()
                             .padding()
                     }
                     
                     Spacer()
                 }
                 .sheet(isPresented: $showAddUser) {
-                    AddUsersCourseView{ users in
-                        Task {
-                            do {
-                                try await vm.usersAddCourse(idUser: users)
-                                let userToScullAux = try await vm.fetchCourseUsersSchool(vm.courseSelected!.0.id!)
-                                DispatchQueue.main.async {
-                                    withAnimation {
-                                        vm.userToCourse = userToScullAux
+                    switch option {
+                    case .usersO:
+                        AddUsersCourseView{ users in
+                            Task {
+                                do {
+                                    try await vm.usersAddCourse(idUser: users)
+                                    let userToScullAux = try await vm.fetchCourseUsersSchool(vm.courseSelected!.0.id!)
+                                    DispatchQueue.main.async {
+                                        withAnimation {
+                                            vm.userToCourse = userToScullAux
+                                        }
                                     }
+                                    showAddUser = false
+                                } catch {
+                                    vm.messageError = error.localizedDescription
                                 }
-                                showAddUser = false
-                            } catch {
-                                vm.messageError = error.localizedDescription
+                            }
+                        }
+                    case .classO:
+                        addClassCourseView { listId in
+                            Task {
+                                do {
+                                    try await vm.classAddCourse(idClass: listId)
+                                    showAddUser = false
+                                } catch {
+                                    vm.messageError = error.localizedDescription
+                                }
                             }
                         }
                     }
+                    
                 }
                 .toolbar(content: {
                     Button {
-                        switch option {
-                        case .usersO: showAddUser = true
-                            
-                        case .classO: break
-                            
-                        }
+                        showAddUser = true
                     } label: {
                         Text("add")
                     }

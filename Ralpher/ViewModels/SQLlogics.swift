@@ -158,13 +158,42 @@ extension ViewModel {
                 }
             }
         }
-        
     }
     
     func userAddCourse(_ idCourse: Int, idUser: UUID) async throws {
         let parameters: [String: String] = ["id_course": String(idCourse), "id_school": String((self.schoolSelected?.id)!), "id_user": idUser.uuidString]
         try await supabase.database
             .from("course_users_school")
+            .insert(parameters)
+            .execute()
+    }
+    
+    func classAddCourse(idClass: Set<Int>) async throws {
+        if let idCourse = self.courseSelected?.0.id {
+            idClass.forEach { id in
+                Task {
+                    do {
+                        try await clasAddCourse(idCourse, idClass: id)
+                        
+                    } catch {
+                        self.messageError = error.localizedDescription
+                    }
+                }
+            }
+            Task {
+                do {
+                    self.classToCourse = try await self.fetchCourseClass(idCourse)
+                } catch {
+                    messageError = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    func clasAddCourse(_ idCourse: Int, idClass: Int) async throws {
+        let parameters: [String: String] = ["id_course": String(idCourse), "id_class": String(idClass)]
+        try await supabase.database
+            .from("course_class")
             .insert(parameters)
             .execute()
     }

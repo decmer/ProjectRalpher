@@ -44,7 +44,7 @@ struct AddUsersCourseView: View {
                         if let users = groupedUsers[role], !users.isEmpty {
                             Section(header: Text(role.rawValue.capitalized)) {
                                 ForEach(users) { user in
-                                    userview(user: user, role: role)
+                                    userPreview(user: user, role: role)
                                         .onTapGesture {
                                             if addUserModel.contains(user.id) {
                                                 addUserModel.remove(user.id)
@@ -72,9 +72,9 @@ struct AddUsersCourseView: View {
         }
     }
     
-    func userview(user: UserModel, role: RoleSchool) -> some View {
-        userPreview(user: user, role: role)
-    }
+//    func userview(user: UserModel, role: RoleSchool) -> some View {
+//        userPreview(user: user, role: role)
+//    }
     
     func userPreview(user: UserModel, role: RoleSchool) -> some View {
         ZStack {

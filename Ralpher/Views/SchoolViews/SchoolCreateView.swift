@@ -84,8 +84,15 @@ struct SchoolCreateView: View {
             
             Button("Create") {
                 Task {
+                    var dataImg: (String, String)?
                     do {
-                        try await vm.createSchool(SchoolsModel(name: name, color: color.toHex()))
+                        if let img = img {
+                            dataImg = try await vm.uploadImageScools(img, oldFileName: nil)
+                        }
+                    }
+                    
+                    do {
+                        try await vm.createSchool(SchoolsModel(name: name, color: color.toHex(), imgname: dataImg?.0, imgurl: dataImg?.1))
                         
                     } catch {
                         vm.messageError = error.localizedDescription

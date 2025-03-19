@@ -58,6 +58,7 @@ final class ViewModel: ObservableObject {
     var channelCourse: RealtimeChannelV2?
     var channelUsersSchool: RealtimeChannelV2?
     var channelUserCourse: RealtimeChannelV2?
+    var channelClassCourse: RealtimeChannelV2?
     
     
     var cacheSchools: Set<SchoolRoleUsers>
@@ -91,6 +92,9 @@ final class ViewModel: ObservableObject {
         }
         Task {
             await subscribeToUserCourse()
+        }
+        Task {
+            await subscribeToClassCourse()
         }
     }
     

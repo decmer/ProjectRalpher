@@ -14,7 +14,7 @@ struct ClassAddView: View {
     @State private var description: String = ""
     @State private var color: Color = .white
     @State private var timePerWeek: Int = 1 // Valor predeterminado para horas por semana
-    @State private var specifiedForCourse = false
+//    @State private var specifiedForCourse = false
 
     @Binding var isPresented: Bool
 
@@ -31,16 +31,16 @@ struct ClassAddView: View {
                     TextEditor(text: $description)
                         .frame(minHeight: 60)
                 }
-                Toggle(isOn: $specifiedForCourse) {
-                    Text("Class specified for course")
-                }
-                if specifiedForCourse {
-                    Section(header: Text("Time Per Week")) {
-                        Stepper(value: $timePerWeek, in: 1...40) {
-                            Text("\(timePerWeek) hour(s) per week")
-                        }
-                    }
-                }
+//                Toggle(isOn: $specifiedForCourse) {
+//                    Text("Class specified for course")
+//                }
+//                if specifiedForCourse {
+//                    Section(header: Text("Time Per Week")) {
+//                        Stepper(value: $timePerWeek, in: 1...40) {
+//                            Text("\(timePerWeek) hour(s) per week")
+//                        }
+//                    }
+//                }
             }
             .navigationTitle("Add Class")
             .toolbar {
@@ -48,7 +48,7 @@ struct ClassAddView: View {
                     Button("Create") {
                         Task {
                             do {
-                                try await vm.createClass(.init(name: name, description: description, id_school: vm.schoolSelected?.id, color: color.toHex(), timeperweek: timePerWeek, specified_for_course: specifiedForCourse))
+                                try await vm.createClass(.init(name: name, description: description, id_school: vm.schoolSelected?.id, color: color.toHex(), timeperweek: timePerWeek))
                                 isPresented = false
                             } catch {
                                 vm.messageError = error.localizedDescription
