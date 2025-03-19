@@ -23,6 +23,20 @@ struct ClassCourseView: View {
             List {
                 ForEach(classModels) { clas in
                     classPreview(clas)
+                        .swipeActions(edge: .trailing) {
+                            Button(action: {
+                                Task {
+                                    do {
+                                        try await vm.classDelCourse(idClass: clas.id!)
+                                    } catch {
+                                        vm.messageError = error.localizedDescription
+                                    }
+                                }
+                            }) {
+                                Label("Eliminar", systemImage: "trash.fill") // Icono de papelera
+                            }
+                            .tint(.red)
+                        }
                 }
             }
             .background(Color.clear)

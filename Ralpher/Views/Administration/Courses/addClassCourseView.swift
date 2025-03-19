@@ -14,7 +14,9 @@ struct addClassCourseView: View {
         if let classM = vm.classM, let classCourse = vm.classToCourse {
             let setClassM = Set(classM)
             let setClassCourse = Set(classCourse)
-            return Array(setClassM.symmetricDifference(setClassCourse))
+            return Array(setClassM.symmetricDifference(setClassCourse)).sorted { classM1, classM2 in
+                classM1.id! < classM2.id!
+            }
         }
         return nil
     }

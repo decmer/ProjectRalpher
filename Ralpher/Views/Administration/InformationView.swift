@@ -143,6 +143,10 @@ struct InformationView: View {
                             do {
                                 if let selectedImage = selectedImage {
                                     result = try await vm.uploadImageScools((selectedImage.pngData())!, oldFileName: vm.schoolSelected?.imgname)
+                                } else if let image = vm.schoolSelected?.imgname {
+                                    try await vm.removeItemBucket(image, bucketName: "imageschools")
+                                    vm.schoolSelected?.imgname = nil
+                                    vm.schoolSelected?.imgurl = nil
                                 }
                             } catch {
                                 vm.messageError = error.localizedDescription

@@ -7,11 +7,11 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1030569269640-cuj6tnd6a69l5te8hn8s9ecnpdbcpqiu</string>
+				<string>com.googleusercontent.apps.1030569269640-398bc598hprondbb1un7sarsokp3covc</string>
 			</array>
 		</dict>
 	</array>
 	<key>GIDClientID</key>
-	<string>1030569269640-cuj6tnd6a69l5te8hn8s9ecnpdbcpqiu.apps.googleusercontent.com</string>
+	<string>1030569269640-398bc598hprondbb1un7sarsokp3covc.apps.googleusercontent.com</string>
 </dict>
 </plist>

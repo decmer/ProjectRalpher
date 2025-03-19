@@ -238,6 +238,18 @@ extension ViewModel {
             .eq("id_user", value: idUser)
             .execute()
     }
+    
+    func classDelCourse(idClass: Int) async throws {
+        if let idCourse = courseSelected?.0.id {
+            try await supabase.database
+                .from("course_class")
+                .delete()
+                .eq("id_course", value: idCourse)
+                .eq("id_class", value: idClass)
+                .execute()
+        }
+    }
+
 
     // Update
     
