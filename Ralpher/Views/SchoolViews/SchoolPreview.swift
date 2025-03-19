@@ -93,7 +93,7 @@ struct SchoolPreview: View {
         } placeholder: {
             ProgressView()
         }
-        .frame(width: .infinity, height: 150)
+        .frame(width: 350, height: 150)
     }
 }
 

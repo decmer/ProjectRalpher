@@ -180,7 +180,7 @@ extension ViewModel {
                             try await removeItemBucket(oldFileName, bucketName: "img")
                         }
                         user.imgname = fileName
-                        user.imgurl = try await getURLBucket(fileName).absoluteString
+                        user.imgurl = try await getURLBucket(fileName, bucketName: "img").absoluteString
                     } else {
                         messageError = "No se ha podido seleccionar una imagen"
                     }

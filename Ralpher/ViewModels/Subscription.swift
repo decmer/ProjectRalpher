@@ -428,9 +428,10 @@ extension ViewModel {
         let id = dic["id"]?.intValue
         let name = dic["name"]?.stringValue ?? ""
         let color = dic["color"]?.stringValue
-        let image = dic["image"]?.stringValue
+        let imgname = dic["imgname"]?.stringValue
+        let imgurl = dic["imgurl"]?.stringValue
 
-        let school = SchoolsModel(id: id, name: name, color: color, image: image)
+        let school = SchoolsModel(id: id, name: name, color: color, imgname: imgname, imgurl: imgurl)
         
         return school
     }

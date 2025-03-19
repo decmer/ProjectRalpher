@@ -216,7 +216,9 @@ extension ViewModel {
         if let school = self.schoolSelected {
             let updatedValues: [String: AnyJSON] = [
                 "name": .string(school.name),
-                "color": .string(school.color ?? "color")
+                "color": .string(school.color ?? "color"),
+                "imgname": (school.imgname != nil) ? .string(school.imgname!) : .null,
+                "imgurl": (school.imgurl != nil) ? .string(school.imgurl!) : .null
             ]
             
             // Realiza la actualización en la tabla 'schools'
@@ -254,19 +256,38 @@ extension ViewModel {
     
     func uploadImage(_ data: Data) async throws {
         let fileName = UUID().uuidString
+        let bucketName = "img"
         
-        try await supabase.storage.from("img")
+        try await supabase.storage.from(bucketName)
             .upload(
                 path: fileName,
                 file: data,
                 options: FileOptions(contentType: "image/jpeg")
             )
         if let oldFileName = self.users?.imgname {
-            try await removeItemBucket(oldFileName, bucketName: "img")
+            try await removeItemBucket(oldFileName, bucketName: bucketName)
         }
         self.users?.imgname = fileName
-        self.users?.imgurl = try await getURLBucket(fileName).absoluteString
+        self.users?.imgurl = try await getURLBucket(fileName, bucketName: bucketName).absoluteString
         try await updateUser()
+    }
+    
+    func uploadImageScools(_ data: Data, oldFileName: String?) async throws -> (String, String) {
+        let fileName = UUID().uuidString
+        let bucketName = "imageschools"
+        
+        try await supabase.storage.from(bucketName)
+            .upload(
+                path: fileName,
+                file: data,
+                options: FileOptions(contentType: "image/jpeg")
+            )
+        if let oldFileName = oldFileName {
+            try await removeItemBucket(oldFileName, bucketName: bucketName)
+        }
+        let urlImage = try await getURLBucket(fileName, bucketName: bucketName).absoluteString
+        
+        return (fileName, urlImage)
     }
     
     func updateUserRole(userId: UUID, newRole: String) async throws {
@@ -301,8 +322,8 @@ extension ViewModel {
         }
     }
     
-    func getURLBucket(_ fileName: String) async throws -> URL {
-        let bucket = supabase.storage.from("img")
+    func getURLBucket(_ fileName: String, bucketName: String) async throws -> URL {
+        let bucket = supabase.storage.from(bucketName)
         return try bucket.getPublicURL(path: fileName)
     }
     

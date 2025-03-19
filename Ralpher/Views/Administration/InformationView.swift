@@ -17,7 +17,7 @@ struct InformationView: View {
     @State var newColorSchool: Color = .black
     @State var selectedItem: PhotosPickerItem?
     @State private var selectedImage: UIImage? = nil
-
+    @State var urlImgOld: String?
     
     var body: some View {
         if vm.schoolSelected != nil {
@@ -81,17 +81,16 @@ struct InformationView: View {
                     .onAppear {
                         newColorSchool = Color(hex: (vm.schoolSelected?.color)!)
                     }
-                    .padding(vm.schoolSelected?.imgurl == nil ? 0 : 30)
-                    
-                    if let img = vm.schoolSelected?.imgurl {
-                        Section(content: {
-                            HStack {
-                                Text("Image")
-                                Spacer()
-                            }
-                            .padding(.horizontal, 30)
-                                
-                        }, footer: {
+                    .padding(.all, 30)
+                    Section(content: {
+                        HStack {
+                            Text("Image")
+                            Spacer()
+                        }
+                        .padding(.horizontal, 30)
+                            
+                    }, footer: {
+                        if let img = urlImgOld {
                             PhotosPicker(
                                 selection: $selectedItem,
                                 matching: .images,
@@ -107,8 +106,29 @@ struct InformationView: View {
                                         }
                                     }
                                 }
-                        })
-                    }
+                        } else {
+                            PhotosPicker(
+                                selection: $selectedItem,
+                                matching: .images,
+                                preferredItemEncoding: .compatible,
+                                photoLibrary: .shared()) {
+                                    if let selectedImage = selectedImage {
+                                        viewNewImage(selectedImage)
+                                    } else {
+                                        Text("No image selected")
+                                            .padding()
+                                    }
+                                }
+                                .onChange(of: selectedItem) { old, newItem in
+                                    Task {
+                                        if let data = try? await newItem?.loadTransferable(type: Data.self),
+                                           let image = UIImage(data: data) {
+                                            selectedImage = image
+                                        }
+                                    }
+                                }
+                        }
+                    })
                     
                     Spacer()
                     
@@ -119,6 +139,18 @@ struct InformationView: View {
                         vm.schoolSelected?.color = newColorSchool.toHex()
 //                        vm.schoolSelected?.image = vm.
                         Task {
+                            var result: (String, String)?
+                            do {
+                                if let selectedImage = selectedImage {
+                                    result = try await vm.uploadImageScools((selectedImage.pngData())!, oldFileName: vm.schoolSelected?.imgname)
+                                }
+                            } catch {
+                                vm.messageError = error.localizedDescription
+                            }
+                            if let result = result {
+                                vm.schoolSelected?.imgname = result.0
+                                vm.schoolSelected?.imgurl = result.1
+                            }
                             do {
                                 try await vm.updateSchool()
                             } catch {
@@ -137,6 +169,9 @@ struct InformationView: View {
                     .padding()
                 }
             }
+            .onAppear {
+                urlImgOld = vm.schoolSelected?.imgurl
+            }
         } else {
             Text("Error")
         }
@@ -145,9 +180,7 @@ struct InformationView: View {
     func photoPreview(_ img: String) -> some View {
         Group {
             if let selectedImage = selectedImage {
-                Image(uiImage: selectedImage)
-                    .frame(width: 350, height: 150)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                viewNewImage(selectedImage)
             } else {
                 AsyncImage(url: URL(string: img)) { image in
                     image
@@ -158,8 +191,59 @@ struct InformationView: View {
                 }
                 .frame(width: 350, height: 150)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay {
+                    HStack {
+                        Spacer()
+                        VStack {
+                            ZStack {
+                                Circle()
+                                    .frame(width: 30, height: 30)
+                                    .tint(.white)
+                                    .opacity(0.4)
+                                Button {
+                                    self.selectedImage = nil
+                                    self.selectedItem = nil
+                                    self.urlImgOld = nil
+                                } label: {
+                                    Image(systemName: "trash.fill")
+                                        .tint(.red)
+                                }
+                            }
+                            .padding()
+                            Spacer()
+                        }
+                    }
+                }
             }
         }
+    }
+    
+    func viewNewImage(_ selectedImage: UIImage) -> some View {
+        Image(uiImage: selectedImage)
+            .frame(width: 350, height: 150)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay {
+                HStack {
+                    Spacer()
+                    VStack {
+                        ZStack {
+                            Circle()
+                                .frame(width: 30, height: 30)
+                                .tint(.white)
+                                .opacity(0.4)
+                            Button {
+                                self.selectedImage = nil
+                                self.selectedItem = nil
+                            } label: {
+                                Image(systemName: "trash.fill")
+                                    .tint(.red)
+                            }
+                        }
+                        .padding()
+                        Spacer()
+                    }
+                }
+            }
     }
 }
 
