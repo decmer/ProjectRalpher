@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import _PhotosUI_SwiftUI
 
 struct InformationView: View {
     @Environment(ViewModel.self) private var vm
@@ -14,6 +15,9 @@ struct InformationView: View {
     @State var codeVisibility: Bool = false
     @State var newNameSchool: String = ""
     @State var newColorSchool: Color = .black
+    @State var selectedItem: PhotosPickerItem?
+    @State private var selectedImage: UIImage? = nil
+
     
     var body: some View {
         if vm.schoolSelected != nil {
@@ -77,7 +81,34 @@ struct InformationView: View {
                     .onAppear {
                         newColorSchool = Color(hex: (vm.schoolSelected?.color)!)
                     }
-                    .padding([.horizontal, .top], 30)
+                    .padding(vm.schoolSelected?.imgurl == nil ? 0 : 30)
+                    
+                    if let img = vm.schoolSelected?.imgurl {
+                        Section(content: {
+                            HStack {
+                                Text("Image")
+                                Spacer()
+                            }
+                            .padding(.horizontal, 30)
+                                
+                        }, footer: {
+                            PhotosPicker(
+                                selection: $selectedItem,
+                                matching: .images,
+                                preferredItemEncoding: .compatible,
+                                photoLibrary: .shared()) {
+                                    photoPreview(img)
+                                }
+                                .onChange(of: selectedItem) { old, newItem in
+                                    Task {
+                                        if let data = try? await newItem?.loadTransferable(type: Data.self),
+                                           let image = UIImage(data: data) {
+                                            selectedImage = image
+                                        }
+                                    }
+                                }
+                        })
+                    }
                     
                     Spacer()
                     
@@ -86,6 +117,7 @@ struct InformationView: View {
                             vm.schoolSelected?.name = newNameSchool
                         }
                         vm.schoolSelected?.color = newColorSchool.toHex()
+//                        vm.schoolSelected?.image = vm.
                         Task {
                             do {
                                 try await vm.updateSchool()
@@ -107,6 +139,26 @@ struct InformationView: View {
             }
         } else {
             Text("Error")
+        }
+    }
+    
+    func photoPreview(_ img: String) -> some View {
+        Group {
+            if let selectedImage = selectedImage {
+                Image(uiImage: selectedImage)
+                    .frame(width: 350, height: 150)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            } else {
+                AsyncImage(url: URL(string: img)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 350, height: 150)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
         }
     }
 }

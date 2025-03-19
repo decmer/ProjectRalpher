@@ -11,5 +11,6 @@ struct SchoolsModel: Identifiable, Decodable, Encodable {
     var id: Int?
     var name: String
     var color: String?
-    var image: String?
+    var imgname: String?
+    var imgurl: String?
 }
